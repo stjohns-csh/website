@@ -143,3 +143,20 @@ ul.dropdown a:hover,ul.dropdown a:focus-visible,ul.dropdown a[aria-current=page]
   ul.dropdown a{padding:8px 10px;font-size:.8rem}
 }
 @media (max-width:600px){.roster{columns:1}}
+
+/* ---------- Events feed (This week + Events page) ---------- */
+.thisweek{background:var(--warm)}
+.tw-day{font-family:var(--display);font-weight:600;font-size:1.3rem;color:var(--blue);margin:0 0 .15em}
+.tw-item{display:flex;gap:16px;align-items:baseline;padding:7px 0;max-width:54ch;border-top:1px solid rgba(0,32,62,.08)}
+.tw-item.first{border-top:0}
+.tw-time{flex:0 0 5.8em;font-weight:700;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;color:var(--soft)}
+.tw-title{flex:1}
+.tw-more{margin-top:1.6em}
+.ev-day{font-family:var(--display);font-weight:600;font-size:1.55rem;color:var(--blue);margin:1.6em 0 .3em;padding-bottom:.25em;border-bottom:1px solid var(--rule)}
+.ev-day:first-of-type{margin-top:0}
+.ev{display:grid;grid-template-columns:7.5em 1fr;gap:2px 22px;padding:16px 0}
+.ev-time{font-weight:700;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;color:var(--soft);padding-top:.35em}
+.ev-title{font-family:var(--display);font-weight:600;font-size:1.35rem;color:var(--blue);line-height:1.2;margin:0}
+.ev-loc{font-size:.88rem;color:var(--soft);margin:.15em 0 0}
+.ev-desc{font-size:1rem;line-height:1.55;margin:.5em 0 0;color:var(--ink);max-width:62ch}
+@media(max-width:600px){.ev{grid-template-columns:1fr;gap:2px}.ev-time{padding-top:0}}
