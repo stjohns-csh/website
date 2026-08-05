@@ -41,13 +41,43 @@
 </header>
 
 <header class="hero" style="background-image:url(/assets/home.jpg)"><div class="wrap">
-<h1>Welcome to St. John&rsquo;s</h1>
+<h1>Welcome to<br>St.&nbsp;John&rsquo;s</h1>
 <p>An Episcopal parish in Cold Spring Harbor. All are welcome at this table.</p>
 <a class="button" href="/worship/">Plan your visit</a>
 </div></header>
 <div class="notice"><div class="wrap"><p>We are rebuilding our website. Everything you need for Sunday is here, and our
 full news archive remains available. The parish office is always glad to hear from you.</p></div></div>
 <main>
+<section class="thisweek"><div class="wrap">
+<h2>This week at St. John&rsquo;s</h2>
+<div id="thisweek" aria-live="polite"><p class="m">Loading this week&rsquo;s events&hellip;</p></div>
+<p class="tw-more"><a class="button" href="/events/">Look ahead &rarr;</a></p>
+</div></section>
+<script>
+(function () {
+  var box = document.getElementById('thisweek');
+  if (!box) return;
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function fallback(){ box.innerHTML = '<p class="m">Join us for worship this Sunday at 8:00 &amp; 10:00 a.m.</p>'; }
+  var keys = {}, today = new Date();
+  for (var i = 0; i < 7; i++) {
+    var dt = new Date(today.getTime() + i * 86400000);
+    keys[new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(dt)] = true;
+  }
+  fetch('/api/events').then(function(r){ return r.json(); }).then(function(d){
+    var evs = (d.events || []).filter(function(e){ return keys[e.dateKey]; });
+    if (!evs.length) { fallback(); return; }
+    var html = '', lastDay = '';
+    evs.forEach(function(e){
+      var isNew = e.dayLabel !== lastDay;
+      if (isNew) { html += '<p class="tw-day">' + esc(e.dayLabel) + '</p>'; lastDay = e.dayLabel; }
+      html += '<div class="tw-item' + (isNew ? ' first' : '') + '"><span class="tw-time">' + esc(e.timeLabel) + '</span><span class="tw-title">' + esc(e.title) + '</span></div>';
+    });
+    box.innerHTML = html;
+  }).catch(fallback);
+})();
+</script>
+
 <section><div class="wrap">
 <h2>Sunday worship</h2>
 <div class="grid">

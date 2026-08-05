@@ -18,7 +18,7 @@ border-bottom:1px solid rgba(255,255,255,.22);text-shadow:0 1px 6px rgba(0,20,40
 nav ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px 20px;margin:0;padding:0}
 nav a{font-family:var(--body);font-weight:700;font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:#fff;text-shadow:0 1px 8px rgba(0,20,40,.6)}
 nav a:hover,nav a[aria-current=page]{color:#fff;border-bottom:2px solid var(--teal)}
-.hero{position:relative;min-height:clamp(560px,72vh,820px);padding-top:150px;display:flex;align-items:center;
+.hero{position:relative;min-height:clamp(460px,58vh,640px);padding-top:150px;display:flex;align-items:center;
 background-color:var(--blue);background-size:cover;background-position:center 42%;background-repeat:no-repeat}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(260deg,rgba(0,32,62,.70),rgba(0,32,62,.38) 52%,rgba(0,32,62,.04)),linear-gradient(to bottom,rgba(0,32,62,.55) 0%,rgba(0,32,62,.18) 13%,rgba(0,32,62,0) 25%)}
 .hero .wrap{position:relative;z-index:1;width:100%;padding:20px 28px 56px;text-align:right}
@@ -27,14 +27,14 @@ background-color:var(--blue);background-size:cover;background-position:center 42
 .button{display:inline-block;background:var(--blue);color:#fff;font-family:var(--body);font-weight:700;font-size:.82rem;
 letter-spacing:.09em;text-transform:uppercase;text-decoration:none;padding:16px 32px;transition:background-color .18s}
 .button:hover{background:var(--blue-dark)}
-.subhero{position:relative;min-height:clamp(440px,54vh,660px);padding-top:132px;display:flex;align-items:flex-end;
+.subhero{position:relative;min-height:clamp(360px,44vh,520px);padding-top:132px;display:flex;align-items:flex-end;
 background-color:var(--blue);background-size:cover;background-position:center 45%;background-repeat:no-repeat}
 .subhero::after{content:"";position:absolute;inset:0;
 background:linear-gradient(to top,rgba(0,32,62,.72) 0%,rgba(0,32,62,.38) 32%,rgba(0,32,62,.04) 64%,rgba(0,32,62,0) 100%),linear-gradient(to bottom,rgba(0,32,62,.58) 0%,rgba(0,32,62,.20) 14%,rgba(0,32,62,0) 27%)}
 .subhero .wrap{position:relative;z-index:1;width:100%;padding:0 28px 40px}
 .subhero h1{font-family:var(--display);font-weight:600;font-size:clamp(2.2rem,5vw,3.4rem);line-height:1.05;
 color:#fff;margin:0;text-shadow:0 2px 16px rgba(0,0,0,.42)}
-section{padding:56px 0}section+section{border-top:1px solid var(--rule)}
+section{padding:44px 0}section+section{border-top:1px solid var(--rule)}
 h2{font-family:var(--body);font-weight:700;font-size:.82rem;letter-spacing:.16em;text-transform:uppercase;
 color:var(--blue);margin:0 0 1.5em;padding-bottom:.7em;border-bottom:2px solid var(--teal);display:inline-block}
 h3{font-family:var(--display);font-weight:600;font-size:1.55rem;line-height:1.2;margin:1.7em 0 .35em;color:var(--blue)}
@@ -94,7 +94,7 @@ footer ul{list-style:none;margin:0;padding:0}footer li{margin-bottom:.25em}
   .brand img{height:52px}
   nav ul{gap:0 20px}
   nav a{display:inline-block;padding:9px 0;font-size:.82rem}
-  .hero{min-height:clamp(460px,62vh,560px);padding-top:168px}
+  .hero{min-height:clamp(380px,54vh,480px);padding-top:168px}
   .hero .wrap{padding:12px 20px 36px}
   .hero h1{font-size:clamp(2.3rem,10vw,3.1rem);max-width:100%}
   .hero p{font-size:1.18rem;max-width:100%}
