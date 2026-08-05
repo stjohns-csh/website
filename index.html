@@ -148,6 +148,28 @@ full news archive remains available. The parish office is always glad to hear fr
   }).catch(fallback);
 })();
 </script>
+<script>
+// Keep the "This week" list the same height as the service video (side by side),
+// scrolling inside its box if there are more events than fit. Desktop only.
+(function () {
+  function match() {
+    var vid = document.querySelector('.duo .video-frame');
+    var wk = document.getElementById('thisweek');
+    if (!vid || !wk) return;
+    if (window.innerWidth > 760) {
+      wk.style.maxHeight = Math.round(vid.getBoundingClientRect().height) + 'px';
+      wk.style.overflowY = 'auto';
+    } else {
+      wk.style.maxHeight = '';
+      wk.style.overflowY = '';
+    }
+  }
+  window.addEventListener('load', match);
+  window.addEventListener('resize', match);
+  setTimeout(match, 500);
+  setTimeout(match, 1400);
+})();
+</script>
 
 <section><div class="wrap"><div class="duo">
 <div>
@@ -166,13 +188,21 @@ community service hours.</p>
 </div>
 <div>
 <h2>Parish news</h2>
+<div id="parishnews" aria-live="polite">
 <div class="prose"><p>Catch up on <em>At St. John&rsquo;s</em>, our weekly newsletter &mdash; this Sunday&rsquo;s
-services, parish notices, and what is happening around the church.</p>
-<p><a class="button" href="/news/">Read this week&rsquo;s news</a></p></div>
+services, parish notices, and what is happening around the church.</p></div>
+</div>
+<p style="margin-top:1.3em"><a class="button" href="/news/">Read this week&rsquo;s news</a></p>
 </div>
 </div></div></section>
 
 <section><div class="wrap"><div class="duo">
+<div>
+<h2>Visiting for the first time</h2>
+<div class="prose"><p>Come as you are. There is no dress code, no expectation that you know when to stand or sit,
+and no obligation in the offering plate. Arrive a few minutes early and someone at the door will give you
+everything you need and show you where to sit.</p></div>
+</div>
 <div>
 <h2>Our mission</h2>
 <div class="prose">
@@ -185,14 +215,28 @@ So be swift to love, and make haste to be kind.</em><br>&mdash; based on a praye
 <p><a href="/welcome-to-st-johns/">More about St. John&rsquo;s &rarr;</a></p>
 </div>
 </div>
-<div>
-<h2>Visiting for the first time</h2>
-<div class="prose"><p>Come as you are. There is no dress code, no expectation that you know when to stand or sit,
-and no obligation in the offering plate. Arrive a few minutes early and someone at the door will give you
-everything you need and show you where to sit.</p></div>
-</div>
 </div></div></section>
 
+<script>
+// Drop the most recent "At St. John's" newsletter issue into the Parish news
+// block, so it has real substance alongside "Happening now".
+(function () {
+  var box = document.getElementById('parishnews');
+  if (!box) return;
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function niceDate(s){ try { var d = new Date(s); if (isNaN(d)) return ''; return new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',year:'numeric'}).format(d); } catch (e) { return ''; } }
+  fetch('/api/newsletter').then(function(r){ return r.json(); }).then(function(d){
+    var it = (d.items || [])[0];
+    if (!it || !it.title) return;               // keep the default blurb
+    var html = '';
+    if (it.image) html += '<a class="news-thumb" href="' + esc(it.link) + '"><img src="' + esc(it.image) + '" alt="" loading="lazy"></a>';
+    html += '<p class="news-title"><a href="' + esc(it.link) + '">' + esc(it.title) + '</a></p>';
+    var dt = niceDate(it.date);
+    if (dt) html += '<p class="news-date">' + esc(dt) + '</p>';
+    box.innerHTML = html;
+  }).catch(function(){});
+})();
+</script>
 </main>
 
 </div>
