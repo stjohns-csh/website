@@ -108,3 +108,38 @@ footer ul{list-style:none;margin:0;padding:0}footer li{margin-bottom:.25em}
   footer .cols{gap:22px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---------- Worship dropdown (added Aug 2026) ---------- */
+.has-dropdown{position:relative;display:flex;align-items:center;gap:3px}
+.dropdown-toggle{background:none;border:0;color:#fff;font-size:.8rem;line-height:1;cursor:pointer;padding:5px 3px;text-shadow:0 1px 8px rgba(0,20,40,.6)}
+.dropdown-toggle:focus-visible{outline:3px solid #fff;outline-offset:2px}
+ul.dropdown{position:absolute;top:100%;left:0;display:none;flex-direction:column;flex-wrap:nowrap;gap:0;min-width:210px;padding:6px 0;margin:8px 0 0;background:var(--blue);border-radius:8px;box-shadow:0 14px 34px rgba(0,20,40,.4);z-index:20}
+ul.dropdown li{margin:0}
+ul.dropdown a{display:block;padding:9px 18px;color:#fff;font-size:.72rem;text-shadow:none;border-bottom:0}
+ul.dropdown a:hover,ul.dropdown a:focus-visible,ul.dropdown a[aria-current=page]{color:#fff;background:rgba(255,255,255,.16);border-bottom:0}
+.has-dropdown:hover>ul.dropdown,.has-dropdown:focus-within>ul.dropdown,.has-dropdown.open>ul.dropdown{display:flex}
+.has-dropdown>a[aria-current=page]{border-bottom:2px solid var(--teal)}
+
+/* ---------- Leadership accordions (added Aug 2026) ---------- */
+.accordion{border-top:1px solid var(--rule)}
+.accordion:last-of-type{border-bottom:1px solid var(--rule)}
+.accordion>summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:var(--display);font-weight:600;font-size:1.55rem;color:var(--blue);padding:18px 2px}
+.accordion>summary::-webkit-details-marker{display:none}
+.accordion>summary::after{content:"+";font-family:var(--body);font-weight:700;font-size:1.5rem;color:var(--teal);line-height:1}
+.accordion[open]>summary::after{content:"\2212"}
+.accordion>summary:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.acc-body{padding:2px 2px 24px}
+.person{margin:0 0 1.05em}
+.person .n{font-family:var(--display);font-weight:600;font-size:1.25rem;color:var(--blue);line-height:1.2;display:block}
+.person .r{display:block;font-size:.95rem;color:var(--soft)}
+.person .c{display:block;font-size:.98rem;margin-top:.1em}
+.acc-group{font-family:var(--body);font-weight:700;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin:.4em 0 1.1em}
+.roster{columns:2;column-gap:44px;max-width:60ch}
+.roster .person{break-inside:avoid}
+
+@media (max-width:760px){
+  ul.dropdown{position:static;box-shadow:none;margin:2px 0 8px;padding:4px 0 4px 14px;min-width:0;background:rgba(0,32,62,.5);border-radius:6px}
+  .has-dropdown{flex-wrap:wrap}
+  ul.dropdown a{padding:8px 10px;font-size:.8rem}
+}
+@media (max-width:600px){.roster{columns:1}}

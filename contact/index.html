@@ -21,10 +21,18 @@
 <a class="brand" href="/"><img src="/assets/logo.png" width="590" height="200" alt="St. John&rsquo;s Episcopal Church, Cold Spring Harbor"></a>
 <nav aria-label="Main"><ul>
 <li><a href="/welcome-to-st-johns/">Welcome</a></li>
-<li><a href="/worship/">Worship</a></li>
-<li><a href="/live/">Online Worship</a></li>
+<li class="has-dropdown">
+<a href="/worship/">Worship</a>
+<button type="button" class="dropdown-toggle" aria-expanded="false" aria-controls="worship-menu" aria-label="Open Worship submenu"><span aria-hidden="true">&#9662;</span></button>
+<ul class="dropdown" id="worship-menu">
+<li><a href="/live/">Watch Live</a></li>
+<li><a href="/worship/baptism/">Baptism</a></li>
+<li><a href="/worship/weddings/">Weddings</a></li>
+<li><a href="/worship/funeral-services/">Funeral Services</a></li>
+</ul>
+</li>
 <li><a href="/music/">Music</a></li>
-<li><a href="/welcome-to-st-johns/clergy-and-staff/">Clergy &amp; Staff</a></li>
+<li><a href="/leadership/">Leadership</a></li>
 <li><a href="/news/">News</a></li>
 <li><a href="/contact/" aria-current="page">Contact</a></li>
 <li><a href="/give/">Give</a></li>
@@ -57,7 +65,7 @@ in touch with the clergy.</p></div>
 <h4>Worship</h4>
 <ul>
 <li><a href="/worship/">Sunday Worship</a></li>
-<li><a href="/live/">Online Worship</a></li>
+<li><a href="/live/">Watch Live</a></li>
 <li><a href="/worship/baptism/">Baptism</a></li>
 <li><a href="/worship/weddings/">Weddings</a></li>
 <li><a href="/worship/funeral-services/">Funeral Services</a></li>
@@ -66,7 +74,7 @@ in touch with the clergy.</p></div>
 <div>
 <h4>Parish</h4>
 <ul>
-<li><a href="/welcome-to-st-johns/clergy-and-staff/">Clergy &amp; Staff</a></li>
+<li><a href="/leadership/">Our Leadership</a></li>
 <li><a href="/community/caring-connection/">Caring Connection</a></li>
 <li><a href="/give/">Give</a></li>
 <li><a href="/pledge/">Make a Pledge</a></li>
@@ -86,5 +94,6 @@ in touch with the clergy.</p></div>
 </div>
 <p style="margin-top:26px;font-size:.86rem;opacity:.85">A parish of the Episcopal Diocese of Long Island.</p>
 </div></footer>
+<script src="/assets/nav.js" defer></script>
 </body>
 </html>

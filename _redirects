@@ -3,3 +3,6 @@
 /podcasts/*    https://stjohns-post-archive.netlify.app/            302
 /events/*      https://stjohns-pages-archive.netlify.app/           302
 /welcome-to-st-johns/latest-posts/  https://stjohns-post-archive.netlify.app/  302
+
+# Old Clergy & Staff page is now Our Leadership
+/welcome-to-st-johns/clergy-and-staff/  /leadership/  301

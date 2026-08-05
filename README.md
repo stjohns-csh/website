@@ -26,16 +26,20 @@ index.html                     Home page
 _redirects                     Sends old WordPress URLs to the archive sites
 netlify.toml                   Netlify configuration (functions)
 assets/                        Stylesheet (site.css), logo, and all page photographs
-welcome-to-st-johns/           Welcome page (+ clergy-and-staff/)
+welcome-to-st-johns/           Welcome page
 worship/                       Worship page (+ baptism/, weddings/, funeral-services/)
+live/                          "Watch Live" — online worship (reached via the Worship menu)
+leadership/                    "Our Leadership" — clergy, staff & vestry (accordions)
 music/  news/  contact/        Standard pages
 give/  pledge/                 Giving pages
-live/                          Online / livestream worship page
 community/caring-connection/   Caring Connection page
 netlify/functions/             The three "self-updating" features (see below)
+assets/nav.js                  Small script that opens the Worship dropdown on tap/click
 ```
 
 Each page lives in its own folder as an `index.html` file, which is why the web addresses are clean (for example, `stjcsh.org/worship/` rather than `worship.html`).
+
+The main menu is: **Welcome · Worship ▾ · Music · Leadership · News · Contact · Give.** The **Worship** item is a dropdown containing Watch Live, Baptism, Weddings, and Funeral Services. The old `/welcome-to-st-johns/clergy-and-staff/` address now redirects to `/leadership/` (see `_redirects`).
 
 ## Design
 
