@@ -110,8 +110,8 @@ footer ul{list-style:none;margin:0;padding:0}footer li{margin-bottom:.25em}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
 /* ---------- Worship dropdown (added Aug 2026) ---------- */
-.has-dropdown{position:relative;display:flex;align-items:center;gap:3px}
-.dropdown-toggle{background:none;border:0;color:#fff;font-size:.8rem;line-height:1;cursor:pointer;padding:5px 3px;text-shadow:0 1px 8px rgba(0,20,40,.6)}
+.has-dropdown{position:relative}
+.dropdown-toggle{display:inline-block;vertical-align:middle;background:none;border:0;color:#fff;font-size:.6rem;line-height:1;cursor:pointer;padding:0;margin:0 0 3px 5px;text-shadow:0 1px 8px rgba(0,20,40,.6)}
 .dropdown-toggle:focus-visible{outline:3px solid #fff;outline-offset:2px}
 ul.dropdown{position:absolute;top:100%;left:0;display:none;flex-direction:column;flex-wrap:nowrap;gap:0;min-width:210px;padding:6px 0;margin:8px 0 0;background:var(--blue);border-radius:8px;box-shadow:0 14px 34px rgba(0,20,40,.4);z-index:20}
 ul.dropdown li{margin:0}
