@@ -176,3 +176,10 @@ ul.dropdown a:hover,ul.dropdown a:focus-visible,ul.dropdown a[aria-current=page]
 /* Newsletter preview image inside the Parish news pair */
 .duo .news-thumb{margin:0 0 14px}
 .duo .news-thumb img{width:100%;max-height:250px;object-fit:cover}
+
+/* A subhead that's the first thing in a block shouldn't carry a big top margin */
+.prose>h3:first-child{margin-top:0}
+
+/* Hover bridge: keep the Worship dropdown open while the mouse crosses the small
+   gap between the label and the panel (fixes "menu disappears before I can click"). */
+.has-dropdown>ul.dropdown::before{content:"";position:absolute;left:0;right:0;top:-14px;height:14px}
