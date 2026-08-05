@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Online Worship &mdash; St. John&#x27;s Episcopal Church</title>
+<meta name="description" content="St. John&#x27;s Episcopal Church, Cold Spring Harbor. Worship Sundays at 8 and 10 a.m.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<div class="topblock">
+<header class="siteheader">
+<div class="topbar"><div class="wrap">
+<span>Worship Sundays at 8 &amp; 10 a.m.</span>
+<span>1670 Route 25A, Cold Spring Harbor, NY 11724 &bull; <a href="tel:+15166926368">(516) 692-6368</a></span>
+</div></div>
+<div class="masthead"><div class="wrap">
+<a class="brand" href="/"><img src="/assets/logo.png" width="590" height="200" alt="St. John&rsquo;s Episcopal Church, Cold Spring Harbor"></a>
+<nav aria-label="Main"><ul>
+<li><a href="/welcome-to-st-johns/">Welcome</a></li>
+<li><a href="/worship/">Worship</a></li>
+<li><a href="/live/" aria-current="page">Online Worship</a></li>
+<li><a href="/music/">Music</a></li>
+<li><a href="/welcome-to-st-johns/clergy-and-staff/">Clergy &amp; Staff</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/contact/">Contact</a></li>
+<li><a href="/give/">Give</a></li>
+</ul></nav>
+</div></div>
+</header>
+<div class="subhero" style="background-image:url(/assets/live.jpg)"><div class="wrap"><h1>Online Worship</h1></div></div>
+<main>
+<section><div class="wrap"><div class="prose">
+<p>If you cannot be with us in person, you are still part of this congregation.</p>
+<h3>Three ways to worship with us live</h3>
+<p>Our Sunday services are streamed live. Choose whichever is easiest for you &mdash; you do not need an account for YouTube or Facebook to watch.</p>
+<div class="live-buttons" style="margin:1.4em 0 .4em">
+<a class="button live-zoom" href="https://us02web.zoom.us/j/85802528173?pwd=cXJXd0pUM3JVRm53Sk9SOUcrNlU2dz09">Join by Zoom</a>
+<a class="button live-yt" href="https://www.youtube.com/channel/UC7hsIp3gxQDWVRZxvYROo-g">Watch on YouTube</a>
+<a class="button live-fb" href="https://www.facebook.com/stjcsh">Watch on Facebook</a>
+</div>
+<p class="m">Zoom lets you be seen and greeted; YouTube and Facebook are watch-only. All three carry the same service.</p>
+</div></div></section>
+<section class="video"><div class="wrap">
+<h2>Most recent service</h2>
+<div id="latest-video" class="video-frame" aria-live="polite">
+  <p class="m" id="video-loading">Loading the most recent service&hellip;</p>
+</div>
+<p class="video-caption" id="video-caption"></p>
+<p style="margin-top:1.2em"><a href="https://www.youtube.com/channel/UC7hsIp3gxQDWVRZxvYROo-g">See all our videos on YouTube &rarr;</a></p>
+</div></section>
+
+<script>
+(function () {
+  var box = document.getElementById('latest-video');
+  var loading = document.getElementById('video-loading');
+  var caption = document.getElementById('video-caption');
+  if (!box || box.dataset.done) return;   // guard against running twice on one page
+  box.dataset.done = '1';
+
+  function fallback() {
+    box.innerHTML =
+      '<p class="m">Our recent services are on ' +
+      '<a href="https://www.youtube.com/channel/UC7hsIp3gxQDWVRZxvYROo-g">our YouTube channel</a>.</p>';
+  }
+
+  fetch('/api/latest-video')
+    .then(function (r) { if (!r.ok) throw new Error('bad'); return r.json(); })
+    .then(function (v) {
+      if (!v || !v.videoId) { fallback(); return; }
+
+      // Facade: show the thumbnail; load the heavy YouTube player only on click.
+      var thumb = 'https://i.ytimg.com/vi/' + v.videoId + '/hqdefault.jpg';
+      box.innerHTML = '';
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'video-facade';
+      btn.setAttribute('aria-label', 'Play video: ' + (v.title || 'latest service'));
+      btn.style.backgroundImage = 'url(' + thumb + ')';
+      var play = document.createElement('span');
+      play.className = 'video-play';
+      play.setAttribute('aria-hidden', 'true');
+      btn.appendChild(play);
+      box.appendChild(btn);
+
+      if (caption && v.title) caption.textContent = v.title;
+
+      btn.addEventListener('click', function () {
+        var iframe = document.createElement('iframe');
+        iframe.src =
+          'https://www.youtube-nocookie.com/embed/' + v.videoId + '?autoplay=1&rel=0';
+        iframe.title = v.title || 'Latest service';
+        iframe.allow =
+          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        box.innerHTML = '';
+        box.appendChild(iframe);
+      });
+    })
+    .catch(fallback);
+})();
+</script>
+
+<section><div class="wrap"><div class="prose">
+<h3>Pray along at home</h3>
+<p><em>The Book of Common Prayer</em> is available online for free at
+<a href="https://www.bcponline.org">bcponline.org</a>, and the daily readings can be found at
+<a href="https://lectionarypage.net">lectionarypage.net</a>.</p>
+<p>If you would like a home visit or Communion brought to you, please
+<a href="/contact/">let the office know</a>.</p>
+</div></div></section></main>
+</div>
+<footer><div class="wrap"><div class="cols">
+<div>
+<h4>St. John&rsquo;s</h4>
+<p>1670 Route 25A</p><p>Cold Spring Harbor, NY 11724</p>
+<p><a href="tel:+15166926368">(516) 692-6368</a></p>
+</div>
+<div>
+<h4>Worship</h4>
+<ul>
+<li><a href="/worship/">Sunday Worship</a></li>
+<li><a href="/live/">Online Worship</a></li>
+<li><a href="/worship/baptism/">Baptism</a></li>
+<li><a href="/worship/weddings/">Weddings</a></li>
+<li><a href="/worship/funeral-services/">Funeral Services</a></li>
+</ul>
+</div>
+<div>
+<h4>Parish</h4>
+<ul>
+<li><a href="/welcome-to-st-johns/clergy-and-staff/">Clergy &amp; Staff</a></li>
+<li><a href="/community/caring-connection/">Caring Connection</a></li>
+<li><a href="/give/">Give</a></li>
+<li><a href="/pledge/">Make a Pledge</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</div>
+<div>
+<h4>Archives</h4>
+<ul>
+<li><a href="/news/">News &amp; newsletter</a></li>
+<li><a href="https://stjohns-post-archive.netlify.app/">Parish news archive</a></li>
+<li><a href="https://stjohns-pages-archive.netlify.app/">Page archive</a></li>
+<li><a href="https://www.facebook.com/stjcsh">Facebook</a></li>
+<li><a href="https://onrealm.org/stjcsh">REALM directory</a></li>
+</ul>
+</div>
+</div>
+<p style="margin-top:26px;font-size:.86rem;opacity:.85">A parish of the Episcopal Diocese of Long Island.</p>
+</div></footer>
+</body>
+</html>

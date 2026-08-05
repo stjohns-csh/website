@@ -1,0 +1,5 @@
+# Anything not yet rebuilt falls through to the searchable archives.
+/blog/*        https://stjohns-post-archive.netlify.app/            302
+/podcasts/*    https://stjohns-post-archive.netlify.app/            302
+/events/*      https://stjohns-pages-archive.netlify.app/           302
+/welcome-to-st-johns/latest-posts/  https://stjohns-post-archive.netlify.app/  302

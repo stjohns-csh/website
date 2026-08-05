@@ -1,0 +1,12 @@
+# Dependencies (not needed — the site has no build step)
+node_modules/
+
+# Netlify local build/cache
+.netlify/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/

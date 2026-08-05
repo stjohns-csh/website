@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>News &mdash; St. John&#x27;s Episcopal Church</title>
+<meta name="description" content="St. John&#x27;s Episcopal Church, Cold Spring Harbor. Worship Sundays at 8 and 10 a.m.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<div class="topblock">
+<header class="siteheader">
+<div class="topbar"><div class="wrap">
+<span>Worship Sundays at 8 &amp; 10 a.m.</span>
+<span>1670 Route 25A, Cold Spring Harbor, NY 11724 &bull; <a href="tel:+15166926368">(516) 692-6368</a></span>
+</div></div>
+<div class="masthead"><div class="wrap">
+<a class="brand" href="/"><img src="/assets/logo.png" width="590" height="200" alt="St. John&rsquo;s Episcopal Church, Cold Spring Harbor"></a>
+<nav aria-label="Main"><ul>
+<li><a href="/welcome-to-st-johns/">Welcome</a></li>
+<li><a href="/worship/">Worship</a></li>
+<li><a href="/live/">Online Worship</a></li>
+<li><a href="/music/">Music</a></li>
+<li><a href="/welcome-to-st-johns/clergy-and-staff/">Clergy &amp; Staff</a></li>
+<li><a href="/news/" aria-current="page">News</a></li>
+<li><a href="/contact/">Contact</a></li>
+<li><a href="/give/">Give</a></li>
+</ul></nav>
+</div></div>
+</header>
+<div class="subhero" style="background-image:url(/assets/news.jpg)"><div class="wrap"><h1>News</h1></div></div>
+<main><section><div class="wrap">
+<h2>At St. John&rsquo;s</h2>
+<div class="prose">
+<p>Our weekly email carries the coming Sunday&rsquo;s services, parish notices, and what is happening
+around the church. The most recent issues are below.</p>
+</div>
+
+<div id="newsletter" class="news-list" aria-live="polite">
+  <p class="m" id="newsletter-loading">Loading the latest issues&hellip;</p>
+</div>
+
+<p style="margin-top:2.2em"><a class="button" href="https://us12.campaign-archive.com/home/?u=6ddc235ebe44ba28f3c710f6e&id=1735e0b8f3">Browse every issue</a></p>
+</div></section>
+
+<section><div class="wrap">
+<h2>Parish news archive</h2>
+<div class="prose">
+<p>Announcements, articles, and photographs going back to 2017 &mdash; more than a thousand posts,
+searchable by year.</p>
+<p><a href="https://stjohns-post-archive.netlify.app/">Open the news archive &rarr;</a></p>
+</div>
+</div></section>
+
+<script>
+(function () {
+  var box = document.getElementById('newsletter');
+  var loading = document.getElementById('newsletter-loading');
+
+  function fallback() {
+    if (loading) {
+      loading.textContent = 'The latest issues are available in our newsletter archive below.';
+    }
+  }
+
+  function when(raw) {
+    try {
+      return new Date(raw).toLocaleDateString('en-US', {
+        weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+      });
+    } catch (e) { return ''; }
+  }
+
+  function row(item, lead) {
+    var wrap = document.createElement('article');
+    wrap.className = lead ? 'news-item news-lead' : 'news-item';
+
+    if (lead && item.image) {
+      var a = document.createElement('a');
+      a.href = item.link;
+      a.className = 'news-thumb';
+      var img = document.createElement('img');
+      img.src = item.image;
+      img.alt = '';
+      img.loading = 'eager';
+      img.decoding = 'async';
+      img.onerror = function () { a.remove(); };
+      a.appendChild(img);
+      wrap.appendChild(a);
+    }
+
+    var h = document.createElement('h3');
+    h.className = 'news-title';
+    var link = document.createElement('a');
+    link.href = item.link;
+    link.textContent = item.title;
+    h.appendChild(link);
+    wrap.appendChild(h);
+
+    var d = document.createElement('p');
+    d.className = 'news-date';
+    d.textContent = when(item.date);
+    wrap.appendChild(d);
+
+    return wrap;
+  }
+
+  fetch('/api/newsletter')
+    .then(function (r) { if (!r.ok) throw new Error('bad status'); return r.json(); })
+    .then(function (data) {
+      var items = (data && data.items) || [];
+      if (!items.length) { fallback(); return; }
+      box.innerHTML = '';
+      items.slice(0, 3).forEach(function (item, i) {
+        box.appendChild(row(item, i === 0));
+      });
+    })
+    .catch(fallback);
+})();
+</script>
+</main>
+</div>
+<footer><div class="wrap"><div class="cols">
+<div>
+<h4>St. John&rsquo;s</h4>
+<p>1670 Route 25A</p><p>Cold Spring Harbor, NY 11724</p>
+<p><a href="tel:+15166926368">(516) 692-6368</a></p>
+</div>
+<div>
+<h4>Worship</h4>
+<ul>
+<li><a href="/worship/">Sunday Worship</a></li>
+<li><a href="/live/">Online Worship</a></li>
+<li><a href="/worship/baptism/">Baptism</a></li>
+<li><a href="/worship/weddings/">Weddings</a></li>
+<li><a href="/worship/funeral-services/">Funeral Services</a></li>
+</ul>
+</div>
+<div>
+<h4>Parish</h4>
+<ul>
+<li><a href="/welcome-to-st-johns/clergy-and-staff/">Clergy &amp; Staff</a></li>
+<li><a href="/community/caring-connection/">Caring Connection</a></li>
+<li><a href="/give/">Give</a></li>
+<li><a href="/pledge/">Make a Pledge</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</div>
+<div>
+<h4>Archives</h4>
+<ul>
+<li><a href="/news/">News &amp; newsletter</a></li>
+<li><a href="https://stjohns-post-archive.netlify.app/">Parish news archive</a></li>
+<li><a href="https://stjohns-pages-archive.netlify.app/">Page archive</a></li>
+<li><a href="https://www.facebook.com/stjcsh">Facebook</a></li>
+<li><a href="https://onrealm.org/stjcsh">REALM directory</a></li>
+</ul>
+</div>
+</div>
+<p style="margin-top:26px;font-size:.86rem;opacity:.85">A parish of the Episcopal Diocese of Long Island.</p>
+</div></footer>
+</body>
+</html>

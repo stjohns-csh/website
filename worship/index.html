@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Worship &mdash; St. John&#x27;s Episcopal Church</title>
+<meta name="description" content="St. John&#x27;s Episcopal Church, Cold Spring Harbor. Worship Sundays at 8 and 10 a.m.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<div class="topblock">
+<header class="siteheader">
+<div class="topbar"><div class="wrap">
+<span>Worship Sundays at 8 &amp; 10 a.m.</span>
+<span>1670 Route 25A, Cold Spring Harbor, NY 11724 &bull; <a href="tel:+15166926368">(516) 692-6368</a></span>
+</div></div>
+<div class="masthead"><div class="wrap">
+<a class="brand" href="/"><img src="/assets/logo.png" width="590" height="200" alt="St. John&rsquo;s Episcopal Church, Cold Spring Harbor"></a>
+<nav aria-label="Main"><ul>
+<li><a href="/welcome-to-st-johns/">Welcome</a></li>
+<li><a href="/worship/" aria-current="page">Worship</a></li>
+<li><a href="/live/">Online Worship</a></li>
+<li><a href="/music/">Music</a></li>
+<li><a href="/welcome-to-st-johns/clergy-and-staff/">Clergy &amp; Staff</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/contact/">Contact</a></li>
+<li><a href="/give/">Give</a></li>
+</ul></nav>
+</div></div>
+</header>
+<div class="subhero" style="background-image:url(/assets/worship.jpg)"><div class="wrap"><h1>Worship</h1></div></div>
+<main>
+
+<section class="livestream"><div class="wrap">
+<h2>Join worship live</h2>
+<p class="live-when">Our services are streamed live on Sunday mornings. Join us on whichever platform suits you best.</p>
+<div class="live-buttons">
+<a class="button live-zoom" href="https://us02web.zoom.us/j/85802528173?pwd=cXJXd0pUM3JVRm53Sk9SOUcrNlU2dz09">Join by Zoom</a>
+<a class="button live-yt" href="https://www.youtube.com/channel/UC7hsIp3gxQDWVRZxvYROo-g">Watch on YouTube</a>
+<a class="button live-fb" href="https://www.facebook.com/stjcsh">Watch on Facebook</a>
+</div>
+</div></section>
+<section><div class="wrap">
+<h2>Sunday services</h2>
+<div class="grid">
+<div class="card"><p class="k">8:00 a.m.</p><p>Holy Eucharist</p><p class="m">Spoken, without music.</p></div>
+<div class="card"><p class="k">10:00 a.m.</p><p>Holy Eucharist</p><p class="m">With the Chancel Choir and organ, September through June.</p></div>
+</div>
+</div></section>
+<section class="video sermons"><div class="wrap">
+<h2>Sermons</h2>
+<p class="sermon-intro">Our most recent sermon. The full collection is on our YouTube channel.</p>
+<div id="latest-sermon" class="video-frame" aria-live="polite">
+  <p class="m" id="sermon-loading">Loading the most recent sermon&hellip;</p>
+</div>
+<p class="video-caption" id="sermon-caption"></p>
+<p style="margin-top:1.2em"><a class="button live-yt" href="https://www.youtube.com/playlist?list=PLLQ82jqNeBnDKasX8MTsz4e9XIuyEXsuT">Watch past sermons on YouTube</a></p>
+</div></section>
+
+<script>
+(function () {
+  var box = document.getElementById('latest-sermon');
+  var loading = document.getElementById('sermon-loading');
+  var caption = document.getElementById('sermon-caption');
+  if (!box || box.dataset.done) return;
+  box.dataset.done = '1';
+
+  function fallback() {
+    box.innerHTML =
+      '<p class="m">Our sermons are on ' +
+      '<a href="https://www.youtube.com/playlist?list=PLLQ82jqNeBnDKasX8MTsz4e9XIuyEXsuT">our YouTube channel</a>.</p>';
+  }
+
+  fetch('/api/latest-sermon')
+    .then(function (r) { if (!r.ok) throw new Error('bad'); return r.json(); })
+    .then(function (v) {
+      if (!v || !v.videoId) { fallback(); return; }
+      var thumb = 'https://i.ytimg.com/vi/' + v.videoId + '/hqdefault.jpg';
+      box.innerHTML = '';
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'video-facade';
+      btn.setAttribute('aria-label', 'Play sermon: ' + (v.title || 'latest sermon'));
+      btn.style.backgroundImage = 'url(' + thumb + ')';
+      var play = document.createElement('span');
+      play.className = 'video-play';
+      play.setAttribute('aria-hidden', 'true');
+      btn.appendChild(play);
+      box.appendChild(btn);
+
+      if (caption && v.title) caption.textContent = v.title;
+
+      btn.addEventListener('click', function () {
+        var iframe = document.createElement('iframe');
+        iframe.src =
+          'https://www.youtube-nocookie.com/embed/' + v.videoId + '?autoplay=1&rel=0';
+        iframe.title = v.title || 'Latest sermon';
+        iframe.allow =
+          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        box.innerHTML = '';
+        box.appendChild(iframe);
+      });
+    })
+    .catch(fallback);
+})();
+</script>
+
+<section><div class="wrap">
+<h2>Sacraments and pastoral offices</h2>
+<div class="prose">
+<p><a href="/worship/baptism/">Baptism</a> &mdash; full initiation by water and the Holy Spirit into Christ&rsquo;s Body the Church.</p>
+<p><a href="/worship/weddings/">Weddings</a> &mdash; who may be married at St. John&rsquo;s, and how to begin.</p>
+<p><a href="/worship/funeral-services/">Funeral Services</a> &mdash; what to do when a death is expected or has occurred.</p>
+<p><a href="/live/">Online Worship</a> &mdash; joining us from home.</p>
+</div>
+</div></section>
+<section><div class="wrap">
+<h2>Worship ministries</h2>
+<div class="prose">
+<p>Acolytes are young people in 6th grade and above who assist the clergy during the 10:00 a.m. service.
+Altar Guild members care for the linens and prepare the altar for each service. Lectors, chalice bearers,
+ushers and greeters all share in leading our common worship, and newcomers are always welcome.</p>
+<p>To volunteer, please <a href="/contact/">contact the parish office</a>.</p>
+<p><a href="https://stjohns-pages-archive.netlify.app/pages/worship-ministries.html">Worship ministries in our archive &rarr;</a></p>
+</div>
+</div></section></main>
+</div>
+<footer><div class="wrap"><div class="cols">
+<div>
+<h4>St. John&rsquo;s</h4>
+<p>1670 Route 25A</p><p>Cold Spring Harbor, NY 11724</p>
+<p><a href="tel:+15166926368">(516) 692-6368</a></p>
+</div>
+<div>
+<h4>Worship</h4>
+<ul>
+<li><a href="/worship/">Sunday Worship</a></li>
+<li><a href="/live/">Online Worship</a></li>
+<li><a href="/worship/baptism/">Baptism</a></li>
+<li><a href="/worship/weddings/">Weddings</a></li>
+<li><a href="/worship/funeral-services/">Funeral Services</a></li>
+</ul>
+</div>
+<div>
+<h4>Parish</h4>
+<ul>
+<li><a href="/welcome-to-st-johns/clergy-and-staff/">Clergy &amp; Staff</a></li>
+<li><a href="/community/caring-connection/">Caring Connection</a></li>
+<li><a href="/give/">Give</a></li>
+<li><a href="/pledge/">Make a Pledge</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</div>
+<div>
+<h4>Archives</h4>
+<ul>
+<li><a href="/news/">News &amp; newsletter</a></li>
+<li><a href="https://stjohns-post-archive.netlify.app/">Parish news archive</a></li>
+<li><a href="https://stjohns-pages-archive.netlify.app/">Page archive</a></li>
+<li><a href="https://www.facebook.com/stjcsh">Facebook</a></li>
+<li><a href="https://onrealm.org/stjcsh">REALM directory</a></li>
+</ul>
+</div>
+</div>
+<p style="margin-top:26px;font-size:.86rem;opacity:.85">A parish of the Episcopal Diocese of Long Island.</p>
+</div></footer>
+</body>
+</html>
