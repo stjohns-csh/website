@@ -48,35 +48,6 @@
 <div class="notice"><div class="wrap"><p>We are rebuilding our website. Everything you need for Sunday is here, and our
 full news archive remains available. The parish office is always glad to hear from you.</p></div></div>
 <main>
-<section class="thisweek"><div class="wrap">
-<h2>This week at St. John&rsquo;s</h2>
-<div id="thisweek" aria-live="polite"><p class="m">Loading this week&rsquo;s events&hellip;</p></div>
-<p class="tw-more"><a class="button" href="/events/">Look ahead &rarr;</a></p>
-</div></section>
-<script>
-(function () {
-  var box = document.getElementById('thisweek');
-  if (!box) return;
-  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-  function fallback(){ box.innerHTML = '<p class="m">Join us for worship this Sunday at 8:00 &amp; 10:00 a.m.</p>'; }
-  var keys = {}, today = new Date();
-  for (var i = 0; i < 7; i++) {
-    var dt = new Date(today.getTime() + i * 86400000);
-    keys[new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(dt)] = true;
-  }
-  fetch('/api/events').then(function(r){ return r.json(); }).then(function(d){
-    var evs = (d.events || []).filter(function(e){ return keys[e.dateKey]; });
-    if (!evs.length) { fallback(); return; }
-    var html = '', lastDay = '';
-    evs.forEach(function(e){
-      var isNew = e.dayLabel !== lastDay;
-      if (isNew) { html += '<p class="tw-day">' + esc(e.dayLabel) + '</p>'; lastDay = e.dayLabel; }
-      html += '<div class="tw-item' + (isNew ? ' first' : '') + '"><span class="tw-time">' + esc(e.timeLabel) + '</span><span class="tw-title">' + esc(e.title) + '</span></div>';
-    });
-    box.innerHTML = html;
-  }).catch(fallback);
-})();
-</script>
 
 <section><div class="wrap">
 <h2>Sunday worship</h2>
@@ -96,35 +67,37 @@ full news archive remains available. The parish office is always glad to hear fr
 <a class="button live-fb" href="https://www.facebook.com/stjcsh">Watch on Facebook</a>
 </div>
 </div></section>
-<section class="video"><div class="wrap">
+
+<section><div class="wrap"><div class="duo">
+<div>
 <h2>This week&rsquo;s service</h2>
 <div id="latest-video" class="video-frame" aria-live="polite">
   <p class="m" id="video-loading">Loading the most recent service&hellip;</p>
 </div>
 <p class="video-caption" id="video-caption"></p>
-<p style="margin-top:1.2em"><a href="https://www.youtube.com/channel/UC7hsIp3gxQDWVRZxvYROo-g">See all our videos on YouTube &rarr;</a></p>
-</div></section>
-
+<p style="margin-top:1.1em"><a href="https://www.youtube.com/channel/UC7hsIp3gxQDWVRZxvYROo-g">See all our videos on YouTube &rarr;</a></p>
+</div>
+<div>
+<h2>This week at St. John&rsquo;s</h2>
+<div id="thisweek" aria-live="polite"><p class="m">Loading this week&rsquo;s events&hellip;</p></div>
+<p class="tw-more"><a class="button" href="/events/">Look ahead &rarr;</a></p>
+</div>
+</div></div></section>
 <script>
 (function () {
   var box = document.getElementById('latest-video');
-  var loading = document.getElementById('video-loading');
   var caption = document.getElementById('video-caption');
-  if (!box || box.dataset.done) return;   // guard against running twice on one page
+  if (!box || box.dataset.done) return;
   box.dataset.done = '1';
-
   function fallback() {
     box.innerHTML =
       '<p class="m">Our recent services are on ' +
       '<a href="https://www.youtube.com/channel/UC7hsIp3gxQDWVRZxvYROo-g">our YouTube channel</a>.</p>';
   }
-
   fetch('/api/latest-video')
     .then(function (r) { if (!r.ok) throw new Error('bad'); return r.json(); })
     .then(function (v) {
       if (!v || !v.videoId) { fallback(); return; }
-
-      // Facade: show the thumbnail; load the heavy YouTube player only on click.
       var thumb = 'https://i.ytimg.com/vi/' + v.videoId + '/hqdefault.jpg';
       box.innerHTML = '';
       var btn = document.createElement('button');
@@ -137,16 +110,12 @@ full news archive remains available. The parish office is always glad to hear fr
       play.setAttribute('aria-hidden', 'true');
       btn.appendChild(play);
       box.appendChild(btn);
-
       if (caption && v.title) caption.textContent = v.title;
-
       btn.addEventListener('click', function () {
         var iframe = document.createElement('iframe');
-        iframe.src =
-          'https://www.youtube-nocookie.com/embed/' + v.videoId + '?autoplay=1&rel=0';
+        iframe.src = 'https://www.youtube-nocookie.com/embed/' + v.videoId + '?autoplay=1&rel=0';
         iframe.title = v.title || 'Latest service';
-        iframe.allow =
-          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
         iframe.allowFullscreen = true;
         box.innerHTML = '';
         box.appendChild(iframe);
@@ -155,8 +124,56 @@ full news archive remains available. The parish office is always glad to hear fr
     .catch(fallback);
 })();
 </script>
+<script>
+(function () {
+  var box = document.getElementById('thisweek');
+  if (!box) return;
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function fallback(){ box.innerHTML = '<p class="m">Join us for worship this Sunday at 8:00 &amp; 10:00 a.m.</p>'; }
+  var keys = {}, today = new Date();
+  for (var i = 0; i < 7; i++) {
+    var dt = new Date(today.getTime() + i * 86400000);
+    keys[new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(dt)] = true;
+  }
+  fetch('/api/events').then(function(r){ return r.json(); }).then(function(d){
+    var evs = (d.events || []).filter(function(e){ return keys[e.dateKey]; });
+    if (!evs.length) { fallback(); return; }
+    var html = '', lastDay = '';
+    evs.forEach(function(e){
+      var isNew = e.dayLabel !== lastDay;
+      if (isNew) { html += '<p class="tw-day">' + esc(e.dayLabel) + '</p>'; lastDay = e.dayLabel; }
+      html += '<div class="tw-item' + (isNew ? ' first' : '') + '"><span class="tw-time">' + esc(e.timeLabel) + '</span><span class="tw-title">' + esc(e.title) + '</span></div>';
+    });
+    box.innerHTML = html;
+  }).catch(fallback);
+})();
+</script>
 
-<section><div class="wrap">
+<section><div class="wrap"><div class="duo">
+<div>
+<h2>Happening now</h2>
+<div class="prose">
+<h3>Volunteer this summer at St. John&rsquo;s Day Camp</h3>
+<p><strong>Mondays, 10:00&ndash;11:15 a.m., through 14 August</strong><br>
+Washington Primary School, 78 Whitson Road, Huntington Station</p>
+<p>Come inspire and be inspired by the children attending St. John&rsquo;s Day Camp, a public-private partnership
+with the Town of Huntington which runs a free camp for low-income families. Read a book, bring a craft project,
+do an age-appropriate science activity, or share a talent or hobby. Teen volunteers are welcome and receive
+community service hours.</p>
+<p>To volunteer or learn more, contact Kerith Freidberg, Chairperson, at
+<a href="mailto:kerithfreidberg@gmail.com">kerithfreidberg@gmail.com</a> or (516)&nbsp;381-5293.</p>
+</div>
+</div>
+<div>
+<h2>Parish news</h2>
+<div class="prose"><p>Catch up on <em>At St. John&rsquo;s</em>, our weekly newsletter &mdash; this Sunday&rsquo;s
+services, parish notices, and what is happening around the church.</p>
+<p><a class="button" href="/news/">Read this week&rsquo;s news</a></p></div>
+</div>
+</div></div></section>
+
+<section><div class="wrap"><div class="duo">
+<div>
 <h2>Our mission</h2>
 <div class="prose">
 <p>We invite all to join us at any of our worship services, and it is our hope that you will find a spiritual home here.
@@ -167,34 +184,15 @@ natural environment.</p>
 So be swift to love, and make haste to be kind.</em><br>&mdash; based on a prayer by Henri-Frederic Amiel</p>
 <p><a href="/welcome-to-st-johns/">More about St. John&rsquo;s &rarr;</a></p>
 </div>
-</div></section>
-<section><div class="wrap">
+</div>
+<div>
 <h2>Visiting for the first time</h2>
 <div class="prose"><p>Come as you are. There is no dress code, no expectation that you know when to stand or sit,
 and no obligation in the offering plate. Arrive a few minutes early and someone at the door will give you
 everything you need and show you where to sit.</p></div>
-</div></section>
-<section><div class="wrap">
-<h2>Happening now</h2>
-<div class="prose">
-<h3>Volunteer this summer at St. John&rsquo;s Day Camp</h3>
-<p><strong>Mondays, 10:00&ndash;11:15 a.m., through 14 August</strong><br>
-Washington Primary School, 78 Whitson Road, Huntington Station</p>
-<p>Come inspire and be inspired by the children attending St. John&rsquo;s Day Camp, a public-private partnership
-with the Town of Huntington which runs a free camp for low-income families. Read a book, bring a craft project,
-do an age-appropriate science activity, or share a talent or hobby. In past summers a parishioner who taught
-yoga came and practised with the children; another who loved gardening helped them plant seeds; two more paired
-up for face painting. Teen volunteers are welcome and receive community service hours.</p>
-<p>To volunteer or learn more, contact Kerith Freidberg, Chairperson, at
-<a href="mailto:kerithfreidberg@gmail.com">kerithfreidberg@gmail.com</a> or (516)&nbsp;381-5293.</p>
 </div>
-</div></section>
-<section><div class="wrap">
-<h2>Parish news</h2>
-<div class="prose"><p>Catch up on <em>At St. John&rsquo;s</em>, our weekly newsletter &mdash; this Sunday&rsquo;s
-services, parish notices, and what is happening around the church.</p>
-<p><a class="button" href="/news/">Read this week&rsquo;s news</a></p></div>
-</div></section>
+</div></div></section>
+
 </main>
 
 </div>
@@ -217,6 +215,7 @@ services, parish notices, and what is happening around the church.</p>
 <div>
 <h4>Parish</h4>
 <ul>
+<li><a href="/events/">Events</a></li>
 <li><a href="/leadership/">Our Leadership</a></li>
 <li><a href="/community/caring-connection/">Caring Connection</a></li>
 <li><a href="/give/">Give</a></li>
