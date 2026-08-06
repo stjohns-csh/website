@@ -183,3 +183,28 @@ ul.dropdown a:hover,ul.dropdown a:focus-visible,ul.dropdown a[aria-current=page]
 /* Hover bridge: keep the Worship dropdown open while the mouse crosses the small
    gap between the label and the panel (fixes "menu disappears before I can click"). */
 .has-dropdown>ul.dropdown::before{content:"";position:absolute;left:0;right:0;top:-14px;height:14px}
+
+/* ---------- Mobile navigation (hamburger) — added Aug 2026 ---------- */
+.nav-toggle{display:none}
+@media (max-width:760px){
+  .masthead .wrap{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px}
+  .nav-toggle{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;padding:0;margin:0 -8px 0 0;background:transparent;border:0;cursor:pointer;color:#fff;order:2}
+  .nav-toggle:focus-visible{outline:3px solid #fff;outline-offset:2px}
+  .nav-toggle .bars,.nav-toggle .bars::before,.nav-toggle .bars::after{content:"";display:block;width:26px;height:2px;background:#fff;border-radius:2px;box-shadow:0 1px 6px rgba(0,20,40,.55);transition:transform .2s ease,opacity .2s ease,background-color .2s ease}
+  .nav-toggle .bars{position:relative}
+  .nav-toggle .bars::before{position:absolute;left:0;top:-8px}
+  .nav-toggle .bars::after{position:absolute;left:0;top:8px}
+  .masthead.nav-open .nav-toggle .bars{background:transparent;box-shadow:none}
+  .masthead.nav-open .nav-toggle .bars::before{transform:translateY(8px) rotate(45deg)}
+  .masthead.nav-open .nav-toggle .bars::after{transform:translateY(-8px) rotate(-45deg)}
+  nav[aria-label="Main"]{order:3;flex-basis:100%;display:none}
+  .masthead.nav-open nav[aria-label="Main"]{display:block}
+  nav[aria-label="Main"]>ul{flex-direction:column;flex-wrap:nowrap;gap:0;background:rgba(0,32,62,.94);border-radius:10px;padding:2px 16px 8px;margin-top:6px;box-shadow:0 16px 34px rgba(0,20,40,.4)}
+  nav[aria-label="Main"]>ul>li{border-top:1px solid rgba(255,255,255,.14)}
+  nav[aria-label="Main"]>ul>li:first-child{border-top:0}
+  nav[aria-label="Main"]>ul>li>a{display:block;padding:13px 2px;font-size:.95rem}
+  nav[aria-label="Main"]>ul>li.has-dropdown{display:flex;flex-wrap:wrap;align-items:center}
+  nav[aria-label="Main"]>ul>li.has-dropdown>a{flex:1}
+  nav[aria-label="Main"] .dropdown-toggle{font-size:.95rem;padding:12px 10px;margin:0}
+  nav[aria-label="Main"] ul.dropdown{flex-basis:100%;margin-top:0}
+}
