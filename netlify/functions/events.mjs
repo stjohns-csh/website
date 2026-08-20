@@ -74,9 +74,14 @@ function rangeLabel(dateKeys) {
 }
 
 export default async () => {
+  // stale-while-revalidate is what keeps this feeling instant: once the edge has
+  // a copy, every visitor gets it immediately — even a stale one — and the refresh
+  // happens in the background. Without it, whoever arrives first after the cache
+  // expires waits on a round trip to Google.
   const headers = {
     "content-type": "application/json",
-    "cache-control": "public, max-age=900, s-maxage=900"
+    "cache-control":
+      "public, max-age=300, s-maxage=900, stale-while-revalidate=86400"
   };
   try {
     const key = process.env.CALENDAR_API_KEY;
@@ -153,7 +158,11 @@ export default async () => {
 
     return new Response(JSON.stringify({ events }), { headers });
   } catch (err) {
-    return new Response(JSON.stringify({ events: [], error: true }), { headers });
+    // Never cache a failure — otherwise one bad minute at Google gets pinned to
+    // the edge and every visitor sees an empty calendar until it expires.
+    return new Response(JSON.stringify({ events: [], error: true }), {
+      headers: { "content-type": "application/json", "cache-control": "no-store" }
+    });
   }
 };
 

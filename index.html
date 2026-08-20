@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css">
+<script>window.__events=fetch('/api/events').then(function(r){return r.json();}).catch(function(){return null;});</script>
 </head>
 <body>
 <div class="topblock">
@@ -143,7 +144,10 @@
     return new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short'})
       .format(new Date(dateKey + 'T12:00:00Z'));
   }
-  fetch('/api/events').then(function(r){ return r.json(); }).then(function(d){
+  // The request was started in <head>, so by now it's usually already answered.
+  (window.__events || fetch('/api/events').then(function(r){ return r.json(); }))
+    .then(function(d){
+    if (!d) throw new Error('events unavailable');
     var evs = (d.events || []).filter(function(e){ return keys[e.dateKey]; });
     if (!evs.length) { fallback(); return; }
 

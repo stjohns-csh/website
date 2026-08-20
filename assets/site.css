@@ -172,10 +172,12 @@ ul.dropdown a:hover,ul.dropdown a:focus-visible,ul.dropdown a[aria-current=page]
 .ev-loc{font-size:.88rem;color:var(--soft);margin:.15em 0 0}
 .ev-desc{font-size:1rem;line-height:1.55;margin:.5em 0 0;color:var(--ink);max-width:62ch}
 .ev-series{font-size:.88rem;color:var(--soft);margin:.4em 0 0}
-.ev{scroll-margin-top:24px;border-radius:6px;transition:background-color .4s ease}
-/* Arriving from a newsletter link: hold the named event briefly so it's findable. */
+.ev{scroll-margin-top:24px;border-radius:6px}
+/* Arriving from a newsletter link: hold the named event so it's findable.
+   Deliberately no transition here — the card is inserted into the DOM already
+   matching :target, so there is no style change for the browser to animate from
+   and a transition leaves the background stuck on its transparent start value. */
 .ev:target{background:rgba(0,32,62,.055);box-shadow:0 0 0 12px rgba(0,32,62,.055)}
-@media(prefers-reduced-motion:reduce){.ev{transition:none}}
 @media(max-width:600px){.ev{grid-template-columns:1fr;gap:2px}.ev-time{padding-top:0}}
 
 /* ---------- Two-column content pairs (home page) ---------- */
