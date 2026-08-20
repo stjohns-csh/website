@@ -227,3 +227,32 @@ ul.dropdown a:hover,ul.dropdown a:focus-visible,ul.dropdown a[aria-current=page]
   nav[aria-label="Main"] .dropdown-toggle{font-size:.95rem;padding:12px 10px;margin:0}
   nav[aria-label="Main"] ul.dropdown{flex-basis:100%;margin-top:0}
 }
+
+/* ---------- Subscribe form (added Aug 2026) ---------- */
+.subscribe-layout{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:start}
+.subscribe-intro h3:first-of-type{margin-top:0}
+.subscribe-intro p{max-width:52ch}
+.subscribe-box{background:var(--warm);padding:30px 32px 34px;border-top:3px solid var(--teal)}
+.subscribe-box h2{margin-top:0}
+.subscribe-form .field{margin:0 0 20px;border:0;padding:0}
+.subscribe-form label,.subscribe-form legend{display:block;font-family:var(--body);font-weight:700;font-size:.76rem;
+letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin:0 0 .5em;padding:0}
+.subscribe-form .req{font-weight:400;letter-spacing:.04em;text-transform:none;color:var(--soft)}
+.subscribe-form input[type=text],.subscribe-form input[type=email]{width:100%;font-family:var(--body);font-size:1rem;
+color:var(--ink);background:#fff;border:1px solid var(--rule);border-radius:0;padding:13px 14px}
+.subscribe-form input[type=text]:focus,.subscribe-form input[type=email]:focus{outline:3px solid var(--blue);outline-offset:1px;border-color:var(--blue)}
+.subscribe-form label.check{display:flex;align-items:flex-start;gap:10px;margin:0 0 .6em;font-weight:400;font-size:1rem;
+letter-spacing:0;text-transform:none;color:var(--ink)}
+.subscribe-form label.check input{margin-top:.35em;flex:0 0 auto;accent-color:var(--blue)}
+.subscribe-form button.button{border:0;cursor:pointer;width:100%}
+.mc-hp{position:absolute;left:-5000px;width:1px;height:1px;overflow:hidden}
+.mc-status{margin:1.1em 0 0;font-size:1rem;color:var(--soft);min-height:1.4em}
+.mc-status.ok{color:var(--blue)}
+.mc-status.bad{color:#8a2b2b}
+@media (max-width:860px){
+  .subscribe-layout{grid-template-columns:1fr;gap:34px}
+}
+@media (max-width:640px){
+  .subscribe-box{padding:24px 20px 28px}
+  .subscribe-form button.button{max-width:none}
+}
