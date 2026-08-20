@@ -1,8 +1,12 @@
 # Anything not yet rebuilt falls through to the searchable archives.
 /blog/*        https://stjohns-post-archive.netlify.app/            302
 /podcasts/*    https://stjohns-post-archive.netlify.app/            302
-/events/*      https://stjohns-pages-archive.netlify.app/           302
 /welcome-to-st-johns/latest-posts/  https://stjohns-post-archive.netlify.app/  302
+
+# /events/* used to fall through to the page archive. It was removed in August
+# 2026 once /events/ was rebuilt here: static files win over redirects, so the
+# calendar itself worked, but the rule would have swallowed any future sub-path
+# such as /events/save-the-pond/.
 
 # Old Clergy & Staff page is now Our Leadership
 /welcome-to-st-johns/clergy-and-staff/  /leadership/  301

@@ -1,4 +1,5 @@
 :root{--blue:#004687;--blue-dark:#003463;--teal:#8CA9C6;--ink:#2C3539;--soft:#5a6570;--rule:#dfe4ea;--warm:#FAF7EF;
+--highlight:rgba(0,32,62,.055);
 --display:"Cormorant Garamond",Georgia,"Times New Roman",serif;--body:"PT Sans","Segoe UI",Helvetica,Arial,sans-serif}
 html{-webkit-text-size-adjust:100%}
 *{box-sizing:border-box}body{margin:0;font-family:var(--body);font-size:18px;line-height:1.65;color:var(--ink);background:#fff}
@@ -177,7 +178,7 @@ ul.dropdown a:hover,ul.dropdown a:focus-visible,ul.dropdown a[aria-current=page]
    Deliberately no transition here — the card is inserted into the DOM already
    matching :target, so there is no style change for the browser to animate from
    and a transition leaves the background stuck on its transparent start value. */
-.ev:target{background:rgba(0,32,62,.055);box-shadow:0 0 0 12px rgba(0,32,62,.055)}
+.ev:target{background:var(--highlight);box-shadow:0 0 0 12px var(--highlight)}
 @media(max-width:600px){.ev{grid-template-columns:1fr;gap:2px}.ev-time{padding-top:0}}
 
 /* ---------- Two-column content pairs (home page) ---------- */
