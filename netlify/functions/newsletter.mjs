@@ -10,12 +10,16 @@ const FEED =
 // title is the only thing that tells them apart — which means the campaign
 // naming convention in Mailchimp is load-bearing. Anything that doesn't announce
 // itself as a reflection is treated as the weekly.
-const WEEKLY = /^\s*at\s+st\.?\s*john'?[’']?s\b/i;
+// "ASJ Extra" is a special edition of the weekly and belongs with it.
+const WEEKLY = /^\s*(at\s+st\.?\s*john'?[’']?s\b|asj\b)/i;
 const REFLECTION = /^\s*sunday\s+reflection\b|^\s*reflection\s*[:—-]/i;
 
 function classify(title) {
   if (REFLECTION.test(title)) return "reflection";
   if (WEEKLY.test(title)) return "weekly";
+  // Anything unrecognised is treated as parish news rather than dropped, so a
+  // campaign titled off-convention still reaches the news page instead of
+  // vanishing silently.
   return "other";
 }
 

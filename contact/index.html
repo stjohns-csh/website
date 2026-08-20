@@ -20,7 +20,15 @@
 <div class="masthead"><div class="wrap">
 <a class="brand" href="/"><img src="/assets/logo.png" width="590" height="200" alt="St. John&rsquo;s Episcopal Church, Cold Spring Harbor"></a>
 <nav aria-label="Main"><ul>
-<li><a href="/welcome-to-st-johns/">Welcome</a></li>
+<li class="has-dropdown">
+<a href="/welcome-to-st-johns/">Welcome</a>
+<button type="button" class="dropdown-toggle" aria-expanded="false" aria-controls="welcome-menu" aria-label="Open Welcome submenu"><span aria-hidden="true">&#9662;</span></button>
+<ul class="dropdown" id="welcome-menu">
+<li><a href="/welcome-to-st-johns/">Plan your visit</a></li>
+<li><a href="/leadership/">Our Leadership</a></li>
+<li><a href="/community/caring-connection/">Caring Connection</a></li>
+</ul>
+</li>
 <li class="has-dropdown">
 <a href="/worship/">Worship</a>
 <button type="button" class="dropdown-toggle" aria-expanded="false" aria-controls="worship-menu" aria-label="Open Worship submenu"><span aria-hidden="true">&#9662;</span></button>
@@ -32,12 +40,11 @@
 </ul>
 </li>
 <li><a href="/music/">Music</a></li>
-<li><a href="/events/">Events</a></li>
-<li><a href="/leadership/">Leadership</a></li>
 <li class="has-dropdown">
-<a href="/news/">News</a>
-<button type="button" class="dropdown-toggle" aria-expanded="false" aria-controls="news-menu" aria-label="Open News submenu"><span aria-hidden="true">&#9662;</span></button>
-<ul class="dropdown" id="news-menu">
+<a href="/events/">Life at St. John&rsquo;s</a>
+<button type="button" class="dropdown-toggle" aria-expanded="false" aria-controls="life-menu" aria-label="Open Life at St. John&rsquo;s submenu"><span aria-hidden="true">&#9662;</span></button>
+<ul class="dropdown" id="life-menu">
+<li><a href="/events/">Calendar</a></li>
 <li><a href="/news/">At St. John&rsquo;s</a></li>
 <li><a href="/reflections/">Sunday Reflections</a></li>
 </ul>
@@ -83,6 +90,7 @@ in touch with the clergy.</p></div>
 <div>
 <h4>Parish</h4>
 <ul>
+<li><a href="/events/">Calendar</a></li>
 <li><a href="/leadership/">Our Leadership</a></li>
 <li><a href="/community/caring-connection/">Caring Connection</a></li>
 <li><a href="/give/">Give</a></li>
@@ -91,9 +99,10 @@ in touch with the clergy.</p></div>
 </ul>
 </div>
 <div>
-<h4>Archives</h4>
+<h4>Reading</h4>
 <ul>
-<li><a href="/news/">News &amp; newsletter</a></li>
+<li><a href="/news/">At St. John&rsquo;s</a></li>
+<li><a href="/reflections/">Sunday Reflections</a></li>
 <li><a href="https://stjohns-post-archive.netlify.app/">Parish news archive</a></li>
 <li><a href="https://stjohns-pages-archive.netlify.app/">Page archive</a></li>
 <li><a href="https://www.facebook.com/stjcsh">Facebook</a></li>
