@@ -38,12 +38,22 @@
 <script>window.__events=fetch('/api/events').then(function(r){return r.json();}).catch(function(){return null;});</script>
 
 <!--
-  Structured data. This is how Google learns our address, phone, and service
-  times, and it is what lets someone searching "episcopal church cold spring
-  harbor" see "Sundays 8:00 and 10:00 AM" without having to click through.
+  Structured data. This is how Google learns our address, phone, denomination,
+  and service times, for the panel that can appear beside a search result for
+  "episcopal church cold spring harbor".
 
   If a service time, the address, or the phone number ever changes, change it
   here as well as in the page text. Nothing checks that the two agree.
+
+  A note for whoever edits this next: the Sunday services are NOT marked up as
+  schema.org Events, and that is deliberate. Google's Event rich result is
+  built for one-off, ticketed, publicly bookable events that each live on their
+  own page. It requires a specific startDate, and its guidelines say not to
+  mark recurring opening hours as events. A weekly Eucharist fits none of that,
+  and an earlier attempt was rejected by Google's validator. Service times
+  belong in the description below. Genuine one-off events with a date and a
+  ticket link -- the Save the Pond benefit, a concert -- would be legitimate
+  Event markup, but only on a page of their own.
 -->
 <script type="application/ld+json">
 {
@@ -72,36 +82,6 @@
   "sameAs": [
     "https://www.facebook.com/stjcsh",
     "https://www.youtube.com/channel/UC7hsIp3gxQDWVRZxvYROo-g"
-  ],
-  "event": [
-    {
-      "@type": "Event",
-      "name": "Holy Eucharist, 8:00 a.m.",
-      "description": "A quiet, spoken service.",
-      "eventSchedule": {
-        "@type": "Schedule",
-        "byDay": "https://schema.org/Sunday",
-        "startTime": "08:00",
-        "repeatFrequency": "P1W",
-        "scheduleTimezone": "America/New_York"
-      },
-      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-      "location": { "@id": "https://stjcsh.org/#church" }
-    },
-    {
-      "@type": "Event",
-      "name": "Holy Eucharist, 10:00 a.m.",
-      "description": "With choir and organ, September through June. Streamed live on Zoom, YouTube, and Facebook.",
-      "eventSchedule": {
-        "@type": "Schedule",
-        "byDay": "https://schema.org/Sunday",
-        "startTime": "10:00",
-        "repeatFrequency": "P1W",
-        "scheduleTimezone": "America/New_York"
-      },
-      "eventAttendanceMode": "https://schema.org/MixedEventAttendanceMode",
-      "location": { "@id": "https://stjcsh.org/#church" }
-    }
   ]
 }
 </script>
