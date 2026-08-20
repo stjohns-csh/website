@@ -80,8 +80,8 @@
 <p style="margin-top:1.1em"><a href="https://www.youtube.com/channel/UC7hsIp3gxQDWVRZxvYROo-g">See all our videos on YouTube &rarr;</a></p>
 </div>
 <div>
-<h2>This week at St. John&rsquo;s</h2>
-<div id="thisweek" aria-live="polite"><p class="m">Loading this week&rsquo;s events&hellip;</p></div>
+<h2>Coming up at St. John&rsquo;s</h2>
+<div id="thisweek" aria-live="polite" tabindex="0" role="region" aria-label="Upcoming events"><p class="m">Loading events&hellip;</p></div>
 <p class="tw-more"><a class="button" href="/events/">Look ahead &rarr;</a></p>
 </div>
 </div></div></section>
@@ -132,19 +132,49 @@
   if (!box) return;
   function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function fallback(){ box.innerHTML = '<p class="m">Join us for worship this Sunday at 8:00 &amp; 10:00 a.m.</p>'; }
+  var DAYS_AHEAD = 21;
   var keys = {}, today = new Date();
-  for (var i = 0; i < 7; i++) {
+  for (var i = 0; i < DAYS_AHEAD; i++) {
     var dt = new Date(today.getTime() + i * 86400000);
     keys[new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(dt)] = true;
+  }
+  // A short weekday name for collapsed runs: "Mon", "Fri".
+  function shortDay(dateKey){
+    return new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short'})
+      .format(new Date(dateKey + 'T12:00:00Z'));
   }
   fetch('/api/events').then(function(r){ return r.json(); }).then(function(d){
     var evs = (d.events || []).filter(function(e){ return keys[e.dateKey]; });
     if (!evs.length) { fallback(); return; }
-    var html = '', lastDay = '';
+
+    // Vacation Bible School shouldn't take five rows. Fold a back-to-back run of
+    // the same event at the same time into the day it starts, noting the span.
+    var rows = [], byRun = {};
     evs.forEach(function(e){
+      var runKey = e.title + '|' + e.timeLabel;
+      var prev = byRun[runKey];
+      var day = Math.round(new Date(e.dateKey + 'T12:00:00Z').getTime() / 86400000);
+      if (prev && day === prev.lastDay + 1) {
+        prev.lastDay = day;
+        prev.row.spanEnd = e.dateKey;
+        return;
+      }
+      var row = { e: e, spanEnd: null };
+      rows.push(row);
+      byRun[runKey] = { lastDay: day, row: row };
+    });
+
+    var html = '', lastDay = '';
+    rows.forEach(function(r){
+      var e = r.e;
       var isNew = e.dayLabel !== lastDay;
       if (isNew) { html += '<p class="tw-day">' + esc(e.dayLabel) + '</p>'; lastDay = e.dayLabel; }
-      html += '<div class="tw-item' + (isNew ? ' first' : '') + '"><span class="tw-time">' + esc(e.timeLabel) + '</span><span class="tw-title">' + esc(e.title) + '</span></div>';
+      var label = esc(e.title);
+      if (r.spanEnd) { label += ' <span class="tw-span">' + esc(shortDay(e.dateKey)) + '&ndash;' + esc(shortDay(r.spanEnd)) + '</span>'; }
+      var title = e.slug
+        ? '<a href="/events/#' + esc(e.slug) + '">' + label + '</a>'
+        : label;
+      html += '<div class="tw-item' + (isNew ? ' first' : '') + '"><span class="tw-time">' + esc(e.timeLabel) + '</span><span class="tw-title">' + title + '</span></div>';
     });
     box.innerHTML = html;
   }).catch(fallback);

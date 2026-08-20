@@ -152,7 +152,18 @@ ul.dropdown a:hover,ul.dropdown a:focus-visible,ul.dropdown a[aria-current=page]
 .tw-item.first{border-top:0}
 .tw-time{flex:0 0 5.8em;font-weight:700;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;color:var(--soft)}
 .tw-title{flex:1}
+.tw-title a{color:inherit;text-decoration:none;border-bottom:1px solid transparent}
+.tw-title a:hover,.tw-title a:focus-visible{color:var(--blue);border-bottom-color:currentColor}
+.tw-span{font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;color:var(--soft);white-space:nowrap;margin-left:.5em}
 .tw-more{margin-top:1.6em}
+/* The box is height-matched to the video, so it scrolls. macOS hides overlay
+   scrollbars until you touch them — style the track so the bar is always there. */
+#thisweek{padding-right:14px;scrollbar-width:thin;scrollbar-color:rgba(0,32,62,.32) rgba(0,32,62,.07)}
+#thisweek::-webkit-scrollbar{width:9px}
+#thisweek::-webkit-scrollbar-track{background:rgba(0,32,62,.07);border-radius:5px}
+#thisweek::-webkit-scrollbar-thumb{background:rgba(0,32,62,.32);border-radius:5px}
+#thisweek::-webkit-scrollbar-thumb:hover{background:rgba(0,32,62,.5)}
+#thisweek:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
 .ev-day{font-family:var(--display);font-weight:600;font-size:1.55rem;color:var(--blue);margin:1.6em 0 .3em;padding-bottom:.25em;border-bottom:1px solid var(--rule)}
 .ev-day:first-of-type{margin-top:0}
 .ev{display:grid;grid-template-columns:7.5em 1fr;gap:2px 22px;padding:16px 0}
