@@ -5,6 +5,20 @@
 const FEED =
   "https://us12.campaign-archive.com/feed?u=6ddc235ebe44ba28f3c710f6e&id=1735e0b8f3";
 
+// Two kinds of campaign go out from this account: the weekly "At St. John's"
+// and the Sunday Reflection. The archive feed carries no tag or folder, so the
+// title is the only thing that tells them apart — which means the campaign
+// naming convention in Mailchimp is load-bearing. Anything that doesn't announce
+// itself as a reflection is treated as the weekly.
+const WEEKLY = /^\s*at\s+st\.?\s*john'?[’']?s\b/i;
+const REFLECTION = /^\s*sunday\s+reflection\b|^\s*reflection\s*[:—-]/i;
+
+function classify(title) {
+  if (REFLECTION.test(title)) return "reflection";
+  if (WEEKLY.test(title)) return "weekly";
+  return "other";
+}
+
 const ENTITIES = {
   "&amp;": "&", "&apos;": "'", "&#39;": "'", "&quot;": '"',
   "&lt;": "<", "&gt;": ">", "&nbsp;": " ",
@@ -81,9 +95,12 @@ export default async () => {
     const xml = await res.text();
 
     // Pass one: read each campaign and note every image it uses.
+    // Scan well past what we return — reflections often outnumber weekly issues,
+    // so a short scan would starve one list to fill the other.
     const raw = [];
+    const seenLinks = new Set();
     let cursor = 0;
-    while (raw.length < 8) {
+    while (raw.length < 40) {
       const open = xml.indexOf("<item>", cursor);
       if (open === -1) break;
       const close = xml.indexOf("</item>", open);
@@ -93,8 +110,10 @@ export default async () => {
       const link = pick(block, "link");
       const date = pick(block, "pubDate");
       const body = pick(block, "content:encoded") || pick(block, "description");
-      if (title && link) {
-        raw.push({ title, link, date, imgs: body ? candidates(body) : [] });
+      // A resend appears again under the same title. Keep the first (newest) only.
+      if (title && link && !seenLinks.has(title)) {
+        seenLinks.add(title);
+        raw.push({ title, link, date, kind: classify(title), imgs: body ? candidates(body) : [] });
       }
       cursor = close + 7;
     }
@@ -111,10 +130,24 @@ export default async () => {
       const unique = item.imgs.filter((u) => seen.get(u) === 1);
       const photo =
         unique.find((u) => /\.jpe?g(\?|$)/i.test(u)) || unique[0] || null;
-      return { title: item.title, link: item.link, date: item.date, image: photo };
+      return {
+        title: item.title,
+        link: item.link,
+        date: item.date,
+        kind: item.kind,
+        image: photo
+      };
     });
 
-    return new Response(JSON.stringify({ items: items.slice(0, 6) }), { headers });
+    // Each list is capped separately so one kind can't crowd out the other.
+    // `items` stays for anything already reading it.
+    const weekly = items.filter((i) => i.kind !== "reflection").slice(0, 6);
+    const reflections = items.filter((i) => i.kind === "reflection").slice(0, 12);
+
+    return new Response(
+      JSON.stringify({ items: items.slice(0, 6), weekly, reflections }),
+      { headers }
+    );
   } catch (err) {
     return new Response(JSON.stringify({ items: [], error: true }), { headers });
   }
