@@ -32,6 +32,7 @@
 </ul>
 </li>
 <li><a href="/music/">Music</a></li>
+<li><a href="/events/" aria-current="page">Events</a></li>
 <li><a href="/leadership/">Leadership</a></li>
 <li><a href="/news/">News</a></li>
 <li><a href="/contact/">Contact</a></li>
@@ -61,13 +62,27 @@
     var html = '', lastDay = '';
     evs.forEach(function(e){
       if (e.dayLabel !== lastDay) { html += '<p class="ev-day">' + esc(e.dayLabel) + '</p>'; lastDay = e.dayLabel; }
-      html += '<div class="ev"><div class="ev-time">' + esc(e.timeLabel) + '</div><div>' +
+      var detail = '';
+      if (e.description) {
+        detail = '<p class="ev-desc">' + esc(e.description) + '</p>';
+        if (e.seriesDates) { detail += '<p class="ev-series">Runs ' + esc(e.seriesDates) + '</p>'; }
+      } else if (e.seriesOf) {
+        detail = '<p class="ev-series"><a href="#' + esc(e.seriesOf) + '">Details for ' +
+                 esc(e.seriesTitle) + ' &uarr;</a></p>';
+      }
+      html += '<div class="ev" id="' + esc(e.slug) + '"><div class="ev-time">' + esc(e.timeLabel) + '</div><div>' +
               '<p class="ev-title">' + esc(e.title) + '</p>' +
               (e.location ? '<p class="ev-loc">' + esc(e.location) + '</p>' : '') +
-              (e.description ? '<p class="ev-desc">' + esc(e.description) + '</p>' : '') +
+              detail +
               '</div></div>';
     });
     box.innerHTML = html;
+    // The cards arrive after the browser has already tried to honour any #hash,
+    // so scroll to the requested event ourselves once it exists.
+    if (location.hash.length > 1) {
+      var target = document.getElementById(location.hash.slice(1));
+      if (target) target.scrollIntoView({ block: 'center' });
+    }
   }).catch(function(){
     box.innerHTML = '<p class="m">We couldn&rsquo;t load the calendar just now. Please try again shortly.</p>';
   });
@@ -93,7 +108,7 @@
 <div>
 <h4>Parish</h4>
 <ul>
-<li><a href="/events/">Events</a></li>
+<li><a href="/events/" aria-current="page">Events</a></li>
 <li><a href="/leadership/">Our Leadership</a></li>
 <li><a href="/community/caring-connection/">Caring Connection</a></li>
 <li><a href="/give/">Give</a></li>

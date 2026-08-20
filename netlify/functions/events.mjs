@@ -35,6 +35,44 @@ function timeLabel(d) {
   return TIME_FMT.format(d).replace(/\s?AM$/i, " a.m.").replace(/\s?PM$/i, " p.m.");
 }
 
+// A URL-safe handle for an event, so the newsletter can link straight to it:
+// /events/#save-the-pond-2026-benefit
+function slugify(s) {
+  return (
+    (s || "event")
+      .toLowerCase()
+      .normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/['\u2018\u2019]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 60) || "event"
+  );
+}
+
+const MONTH_DAY = new Intl.DateTimeFormat("en-US", { timeZone: TZ, month: "long", day: "numeric" });
+const DAY_ONLY  = new Intl.DateTimeFormat("en-US", { timeZone: TZ, day: "numeric" });
+const MONTH_NUM = new Intl.DateTimeFormat("en-US", { timeZone: TZ, month: "numeric" });
+
+// "August 24–28" when the dates run back to back, otherwise a plain list.
+function rangeLabel(dateKeys) {
+  if (dateKeys.length < 2) return "";
+  const days = dateKeys
+    .map((k) => new Date(k + "T12:00:00Z"))
+    .sort((a, b) => a - b);
+
+  let consecutive = true;
+  for (let i = 1; i < days.length; i++) {
+    if (Math.round((days[i] - days[i - 1]) / 86400000) !== 1) { consecutive = false; break; }
+  }
+
+  const first = days[0];
+  const last = days[days.length - 1];
+  if (!consecutive) return days.map((d) => MONTH_DAY.format(d)).join(", ");
+
+  const sameMonth = MONTH_NUM.format(first) === MONTH_NUM.format(last);
+  return MONTH_DAY.format(first) + "–" + (sameMonth ? DAY_ONLY.format(last) : MONTH_DAY.format(last));
+}
+
 export default async () => {
   const headers = {
     "content-type": "application/json",
@@ -61,6 +99,8 @@ export default async () => {
 
     const events = (data.items || [])
       .filter(e => e.status !== "cancelled" && e.start && (e.start.dateTime || e.start.date))
+      // An event marked private on the public calendar stays off the website.
+      .filter(e => e.visibility !== "private" && e.visibility !== "confidential")
       .map(e => {
         const allDay = !e.start.dateTime;
         const d = allDay ? new Date(e.start.date + "T12:00:00Z") : new Date(e.start.dateTime);
@@ -74,6 +114,42 @@ export default async () => {
           description: stripHtml(e.description)
         };
       });
+
+    // Give every event a unique handle. The soonest occurrence of a title keeps
+    // the clean slug — so a newsletter link to #save-the-pond-2026-benefit stays
+    // pointed at the right thing — and any later repeat is suffixed with its date.
+    const usedSlugs = new Set();
+    events.forEach((ev) => {
+      const base = slugify(ev.title);
+      let slug = base;
+      if (usedSlugs.has(slug)) slug = base + "-" + ev.dateKey;
+      let n = 2;
+      while (usedSlugs.has(slug)) slug = base + "-" + ev.dateKey + "-" + n++;
+      usedSlugs.add(slug);
+      ev.slug = slug;
+    });
+
+    // Vacation Bible School runs five days with one description. Print it once.
+    // Later days point back to the day that carries the detail.
+    const groups = new Map();
+    events.forEach((ev) => {
+      if (!ev.description) return;
+      const key = ev.title + "\u0000" + ev.description;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(ev);
+    });
+
+    groups.forEach((group) => {
+      if (group.length < 2) return;
+      const lead = group[0];
+      lead.seriesDates = rangeLabel(group.map((ev) => ev.dateKey));
+      lead.seriesCount = group.length;
+      group.slice(1).forEach((ev) => {
+        ev.description = "";
+        ev.seriesOf = lead.slug;
+        ev.seriesTitle = lead.title;
+      });
+    });
 
     return new Response(JSON.stringify({ events }), { headers });
   } catch (err) {

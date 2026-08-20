@@ -160,6 +160,11 @@ ul.dropdown a:hover,ul.dropdown a:focus-visible,ul.dropdown a[aria-current=page]
 .ev-title{font-family:var(--display);font-weight:600;font-size:1.35rem;color:var(--blue);line-height:1.2;margin:0}
 .ev-loc{font-size:.88rem;color:var(--soft);margin:.15em 0 0}
 .ev-desc{font-size:1rem;line-height:1.55;margin:.5em 0 0;color:var(--ink);max-width:62ch}
+.ev-series{font-size:.88rem;color:var(--soft);margin:.4em 0 0}
+.ev{scroll-margin-top:24px;border-radius:6px;transition:background-color .4s ease}
+/* Arriving from a newsletter link: hold the named event briefly so it's findable. */
+.ev:target{background:rgba(0,32,62,.055);box-shadow:0 0 0 12px rgba(0,32,62,.055)}
+@media(prefers-reduced-motion:reduce){.ev{transition:none}}
 @media(max-width:600px){.ev{grid-template-columns:1fr;gap:2px}.ev-time{padding-top:0}}
 
 /* ---------- Two-column content pairs (home page) ---------- */
