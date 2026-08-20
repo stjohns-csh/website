@@ -6,3 +6,10 @@
 
 # Old Clergy & Staff page is now Our Leadership
 /welcome-to-st-johns/clergy-and-staff/  /leadership/  301
+
+# This Week's Bulletin.
+# The site links to /bulletin everywhere, so the Drive address lives only here.
+# Kim keeps the same Drive file each week (File information > Manage versions),
+# which means this line should not need to change. If the parish ever moves the
+# leaflet somewhere other than Drive, change this one line and every button follows.
+/bulletin  https://drive.google.com/file/d/18UaIYCAzCQ8_VdaiSA07dQI-kvvtAGCk/view  302
