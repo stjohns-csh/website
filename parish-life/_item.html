@@ -3,25 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Busy in the Quiet &mdash; St. John&#x27;s Episcopal Church</title>
-<meta name="description" content="The steeple repainted, the gardens tended, and the pond&#x27;s weir moving toward DEC approval.">
+<title>Parish Life &mdash; St. John&#x27;s Episcopal Church</title>
+<meta name="description" content="Reports, updates and stories from the life of St. John&#x27;s, Cold Spring Harbor.">
 <!-- head-meta:start -->
-<link rel="canonical" href="https://stjcsh.org/parish-life/busy-in-the-quiet/">
+<link rel="canonical" href="https://stjcsh.org/parish-life/">
 
 <!-- How this link looks when someone shares it -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="St. John&#x27;s Episcopal Church">
-<meta property="og:title" content="Busy in the Quiet &mdash; St. John&#x27;s Episcopal Church">
-<meta property="og:description" content="The steeple repainted, the gardens tended, and the pond&#x27;s weir moving toward DEC approval.">
-<meta property="og:url" content="https://stjcsh.org/parish-life/busy-in-the-quiet/">
+<meta property="og:title" content="Parish Life &mdash; St. John&#x27;s Episcopal Church">
+<meta property="og:description" content="Reports, updates and stories from the life of St. John&#x27;s, Cold Spring Harbor.">
+<meta property="og:url" content="https://stjcsh.org/parish-life/">
 <meta property="og:image" content="https://stjcsh.org/assets/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="St. John&rsquo;s Episcopal Church, Cold Spring Harbor">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Busy in the Quiet &mdash; St. John&#x27;s Episcopal Church">
-<meta name="twitter:description" content="The steeple repainted, the gardens tended, and the pond&#x27;s weir moving toward DEC approval.">
+<meta name="twitter:title" content="Parish Life &mdash; St. John&#x27;s Episcopal Church">
+<meta name="twitter:description" content="Reports, updates and stories from the life of St. John&#x27;s, Cold Spring Harbor.">
 <meta name="twitter:image" content="https://stjcsh.org/assets/og-image.jpg">
 
 <!-- Browser tab and home-screen icons -->
@@ -93,34 +93,12 @@
 <div class="subhero subhero-reading"><div class="wrap"><h1>Parish Life</h1><p class="pl-lede">The work behind the scenes, the ministries at work, and stories worth sharing.</p></div></div>
 <main>
 <section><div class="wrap">
-<article class="pl-article">
-<p class="pl-meta"><time datetime="2026-07-16">16 July 2026</time><span class="sep" aria-hidden="true">&bull;</span>Buildings &amp; Grounds</p>
-<h1>Busy in the Quiet</h1>
-<p class="pl-standfirst">The steeple repainted, the gardens tended, and the weir moving
-slowly toward the DEC&rsquo;s approval.</p>
-<div class="pl-body">
-<p>Although our church calendar looks quiet, like we are taking a break, we have been
-busy behind the scenes working on projects. The B &amp; G committee, for example, brought in
-a crew this week to scrape and paint our steeple which has been showing its age, faded and
-weathered. It has been years since this was given attention. On Sunday be sure to look up at
-the shiny new paint job, and enjoy the wonderful sounds of bells ringing through its green
-louvered sides.</p>
-
-<p>Wayne, our sexton, has been tending to gardens and shrubs this month, trimming and
-weeding.</p>
-
-<p>Work also continues on behalf of the pond&rsquo;s aging weir. We are deeply concerned that
-it continues to weaken; it has been decades since it was replaced. So, we had hired an
-engineering firm to develop draw plans and write procedures for its replacement. Between
-revisions to initial plans and detailed email correspondence this month, we are preparing
-everything necessary for what we hope will be the DEC&rsquo;s final approval.</p>
-
-<p>Do visit us, bring lunch, sit in our Gazebo, behold the pond&rsquo;s beauty, and marvel at
-the amazingly diverse wildlife. It&rsquo;s a nice place to pray as well. You can even pray that
-our application is quickly approved by the DEC!</p>
-</div>
-<p class="pl-signoff">Peace, <strong>Fr. Doug</strong><br>
-First published in <a href="/news/">At St. John&rsquo;s</a>, 16 July 2026.</p>
+<article class="pl-article" id="pl-article">
+<p class="pl-meta" id="pl-meta"></p>
+<h1 id="pl-title">Parish Life</h1>
+<p class="pl-standfirst" id="pl-standfirst" hidden></p>
+<div class="pl-body" id="pl-body"></div>
+<p class="pl-signoff" id="pl-signoff" hidden></p>
 <a class="pl-back" href="/parish-life/">&larr; All of Parish Life</a>
 </article>
 </div></section>
@@ -189,6 +167,101 @@ Church information <span class="chev" aria-hidden="true">&#9662;</span></button>
     btn.setAttribute('aria-expanded', String(!open));
     box.hidden = open;
   });
+})();
+</script>
+<script>
+// One template serves every Parish Life item. `_redirects` rewrites
+// /parish-life/<slug>/ here (a 200 rewrite, so the address bar keeps the real
+// URL), and this reads the slug back out of the path and asks the feed for it.
+//
+// Static files still win over the rewrite, so any hand-built page — currently
+// /parish-life/busy-in-the-quiet/ — is served as itself and never reaches this.
+//
+// Everything is set with textContent. The text comes from a Google Form filled
+// in by parish staff, and this page is public.
+(function () {
+  var art  = document.getElementById('pl-article');
+  var meta = document.getElementById('pl-meta');
+  var h1   = document.getElementById('pl-title');
+  var sf   = document.getElementById('pl-standfirst');
+  var body = document.getElementById('pl-body');
+  var sign = document.getElementById('pl-signoff');
+
+  var slug = (location.pathname.replace(/^\/parish-life\/?/, '').replace(/\/+$/, '') || '');
+
+  function fail(heading, message) {
+    h1.textContent = heading;
+    body.textContent = '';
+    var p = document.createElement('p');
+    p.textContent = message;
+    body.appendChild(p);
+  }
+
+  if (!slug) { fail('We could not find that page', 'Try the list of everything in Parish Life below.'); return; }
+
+  fetch('/api/parish-life?slug=' + encodeURIComponent(slug))
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (data) {
+      var item = data && data.item;
+      if (!item) {
+        fail('We could not find that page', 'That piece may have been renamed, or the link may have a typo in it. Everything we have published is on the Parish Life page.');
+        return;
+      }
+
+      // The tab and the address bar. Link previews in Facebook and iMessage are
+      // read from the served HTML before this runs, so they stay generic — an
+      // accepted trade for having no build step. Revisit only if sharing a single
+      // piece to social becomes something the parish actually does.
+      document.title = item.title + ' \u2014 St. John\u2019s Episcopal Church';
+
+      if (item.date) {
+        var t = document.createElement('time');
+        t.setAttribute('datetime', item.date);
+        t.textContent = item.dateLabel || item.date;
+        meta.appendChild(t);
+      }
+      if (item.category) {
+        var sep = document.createElement('span');
+        sep.className = 'sep';
+        sep.setAttribute('aria-hidden', 'true');
+        sep.textContent = '\u2022';
+        meta.appendChild(sep);
+        meta.appendChild(document.createTextNode(item.category));
+      }
+
+      h1.textContent = item.title;
+
+      if (item.standfirst) { sf.textContent = item.standfirst; sf.hidden = false; }
+
+      if (item.image) {
+        var fig = document.createElement('span');
+        fig.className = 'pl-thumb';
+        var img = document.createElement('img');
+        img.src = item.image;
+        img.alt = '';
+        fig.appendChild(img);
+        art.insertBefore(fig, body);
+      }
+
+      (item.paragraphs || []).forEach(function (text) {
+        var p = document.createElement('p');
+        p.textContent = text;
+        body.appendChild(p);
+      });
+
+      // Byline sits at the foot, as it does on the hand-built page.
+      if (item.byline) {
+        var strong = document.createElement('strong');
+        strong.textContent = item.byline;
+        sign.appendChild(strong);
+        sign.hidden = false;
+      }
+    })
+    .catch(function () {
+      // Not the same as a missing page, and shouldn't say so: the piece is
+      // very likely fine and the connection is not.
+      fail('This page did not load', 'Something went wrong fetching it. Please try again in a moment.');
+    });
 })();
 </script>
 <script src="/assets/nav.js" defer></script>

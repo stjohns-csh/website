@@ -17,3 +17,17 @@
 # which means this line should not need to change. If the parish ever moves the
 # leaflet somewhere other than Drive, change this one line and every button follows.
 /bulletin  https://drive.google.com/file/d/18UaIYCAzCQ8_VdaiSA07dQI-kvvtAGCk/view  302
+
+# Parish Life reading pages. One template, /parish-life/_item.html, serves every
+# item; it reads the slug out of the path and fetches it from /api/parish-life.
+# A 200 rewrite, so the visitor keeps the real URL — the stable address the
+# newsletter links to.
+#
+# Static files win over redirects, so the hand-built
+# /parish-life/busy-in-the-quiet/ is still served as itself and never reaches
+# the template. Same reason /events/* was removed above: read that note first
+# if this ever appears to be swallowing something.
+#
+# /parish-life/ itself is a real file and so is unaffected by this rule.
+/parish-life/*   /parish-life/_item.html   200
+
