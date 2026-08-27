@@ -11,3 +11,6 @@ Thumbs.db
 .vscode/
 .idea/
 .fuse_hidden*
+
+# Scratch left by a session that could not delete files. Safe to remove.
+_TRASH-ME-then-delete-this-folder/

@@ -206,33 +206,121 @@ Church information <span class="chev" aria-hidden="true">&#9662;</span></button>
 </script>
 <script src="/assets/nav.js" defer></script>
 <script>
-(function () {{
+// Two jobs: fill the list from /api/parish-life, and filter it.
+//
+// The five items in the HTML above are NOT placeholders to be deleted. They are
+// the fallback. If the feed is empty, slow, or broken — or JavaScript is off —
+// the visitor gets that page, which is a real page. The feed replaces them only
+// once it has actually returned something. A parish website should never be
+// able to show a visitor an empty room because a spreadsheet was unreachable.
+(function () {
   var list  = document.getElementById('pl-list');
   var count = document.getElementById('pl-count');
   var empty = document.getElementById('pl-empty');
-  var items = Array.prototype.slice.call(list.querySelectorAll('.pl-item'));
   var btns  = Array.prototype.slice.call(document.querySelectorAll('.pl-filter button'));
+  var current = 'all';
 
-  function apply(which) {{
+  function items() {
+    return Array.prototype.slice.call(list.querySelectorAll('.pl-item'));
+  }
+
+  function apply(which) {
+    current = which;
     var shown = 0;
-    items.forEach(function (el) {{
+    items().forEach(function (el) {
       var match = which === 'all' || el.getAttribute('data-category') === which;
       el.hidden = !match;
       if (match) shown++;
-    }});
-    btns.forEach(function (b) {{
+    });
+    btns.forEach(function (b) {
       b.setAttribute('aria-pressed', String(b.getAttribute('data-filter') === which));
-    }});
+    });
     empty.hidden = shown > 0;
-    count.textContent = which === 'all'
-      ? 'All ' + shown
-      : shown + ' in ' + which;
-  }}
+    count.textContent = which === 'all' ? 'All ' + shown : shown + ' in ' + which;
+  }
 
-  btns.forEach(function (b) {{
-    b.addEventListener('click', function () {{ apply(b.getAttribute('data-filter')); }});
-  }});
-}})();
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.getAttribute('data-filter')); });
+  });
+
+  // Everything below builds DOM nodes and sets textContent. Never innerHTML:
+  // this text is typed by parish staff into a form, and the endpoint that
+  // serves it is public.
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  function render(item) {
+    var href = '/parish-life/' + item.slug + '/';
+    var art = el('article', 'pl-item');
+    art.setAttribute('data-category', item.category || '');
+
+    var meta = el('p', 'pl-meta');
+    if (item.date) {
+      var t = el('time', null, item.dateLabel || item.date);
+      t.setAttribute('datetime', item.date);
+      meta.appendChild(t);
+    }
+    // An uncategorised item shows its date alone — no chip, no catch-all.
+    if (item.category) {
+      var sep = el('span', 'sep', '\u2022');
+      sep.setAttribute('aria-hidden', 'true');
+      meta.appendChild(sep);
+      meta.appendChild(document.createTextNode(item.category));
+    }
+    art.appendChild(meta);
+
+    // A photograph is a bonus, never a requirement — most items arrive without.
+    if (item.image) {
+      var thumb = el('a', 'pl-thumb');
+      thumb.href = href;
+      var img = document.createElement('img');
+      img.src = item.image;
+      img.alt = '';
+      img.loading = 'lazy';
+      thumb.appendChild(img);
+      art.appendChild(thumb);
+    }
+
+    var h = el('h3');
+    var a = el('a', null, item.title);
+    a.href = href;
+    h.appendChild(a);
+    art.appendChild(h);
+
+    art.appendChild(el('p', 'pl-excerpt', item.excerpt || ''));
+
+    var by = el('p', 'pl-by');
+    if (item.byline) {
+      // Spacing matches the static fallback exactly (space + nbsp + middot + nbsp +
+      // space), so a visitor cannot tell the fed page from the built one.
+      by.appendChild(document.createTextNode(item.byline + ' \u00a0\u00b7\u00a0 '));
+    }
+    var more = el('a', null, 'Read on \u2192');
+    more.href = href;
+    by.appendChild(more);
+    art.appendChild(by);
+
+    return art;
+  }
+
+  apply('all');
+
+  fetch('/api/parish-life')
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (data) {
+      if (!data || !data.items || !data.items.length) return;   // keep the fallback
+      items().forEach(function (n) { n.remove(); });
+      var frag = document.createDocumentFragment();
+      data.items.forEach(function (item) { frag.appendChild(render(item)); });
+      list.insertBefore(frag, empty);
+      apply(current);
+    })
+    .catch(function () { /* keep the fallback */ });
+})();
 </script>
 </body>
 </html>
