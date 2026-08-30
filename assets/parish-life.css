@@ -258,6 +258,37 @@ main > section:first-child { padding-top: 26px; }
    shares one left edge — the same edge as the logo and the masthead title.
    Moving the title alone would have given the page two left edges. */
 .pl-bar, .pl-list { max-width: var(--pl-measure); margin-left: 0; margin-right: 0; }
+
+/* Two columns from 900px up.
+   Below that it stays a single column: two columns of readable text do not fit
+   on a phone, and forcing them would break the measure the whole page is built
+   around.
+
+   The measure still governs — each column lands at roughly 500px, close to the
+   35rem the single column uses, so the line length a reader actually gets barely
+   changes. What changes is how much of the page they can see at once, which is
+   the point: a growing archive stops being an endless scroll.
+
+   `align-items: start` matters. Without it, grid stretches every item in a row
+   to the height of the tallest, so a two-line blurb beside a photographed item
+   would sit in a cell with a large empty space under it and the separators
+   would stop lining up with the text. */
+@media (min-width: 900px) {
+  .pl-bar, .pl-list { max-width: none; }
+  .pl-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 56px;
+    align-items: start;
+  }
+  /* In one column only the first item sits flush to the top. In two, the first
+     TWO do — otherwise the right-hand column starts with a stray rule above it. */
+  .pl-item:first-child { border-top: 1px solid var(--rule); padding-top: 34px; margin-top: 34px; }
+  .pl-item:nth-child(-n+2) { border-top: 0; padding-top: 0; margin-top: 34px; }
+  /* The empty-state message is a single line and should not be trapped in one
+     half of the grid. */
+  .pl-empty { grid-column: 1 / -1; }
+}
 .pl-bar {
   display: flex; align-items: baseline; justify-content: space-between;
   gap: 18px; flex-wrap: wrap;
