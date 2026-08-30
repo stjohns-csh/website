@@ -116,7 +116,14 @@ export default async () => {
           timeLabel: allDay ? "All day" : timeLabel(d),
           allDay,
           location: cleanLocation(e.location),
-          description: stripHtml(e.description)
+          description: stripHtml(e.description),
+          // Raw machine-readable times, alongside the display labels above.
+          // Everything else here is formatted for reading; these two are for
+          // /api/event.ics, which needs real timestamps rather than "8:00 a.m.".
+          // Timed events carry an ISO instant; all-day events carry Google's
+          // plain YYYY-MM-DD, which is a different thing and must stay one.
+          start: allDay ? e.start.date : e.start.dateTime,
+          end: e.end ? (allDay ? e.end.date : e.end.dateTime) : null
         };
       });
 

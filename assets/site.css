@@ -189,6 +189,36 @@ ul.dropdown a:hover,ul.dropdown a:focus-visible,ul.dropdown a[aria-current=page]
    matching :target, so there is no style change for the browser to animate from
    and a transition leaves the background stuck on its transparent start value. */
 .ev:target{background:var(--highlight);box-shadow:0 0 0 12px var(--highlight)}
+
+/* Event descriptions: two lines closed, all of it open.
+   The description is written once, inside <summary>. The clamp is on the closed
+   state only, so opening simply releases it — no second copy to drift. */
+.ev-more{margin:.5em 0 0}
+.ev-more summary{list-style:none;cursor:pointer;display:block}
+.ev-more summary::-webkit-details-marker{display:none}
+.ev-more summary::marker{content:""}
+.ev-clamp{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ev-more[open] .ev-clamp{display:block;overflow:visible}
+.ev-more-cue,.ev-add a{font-family:var(--sans);font-size:.82rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--blue)}
+.ev-more-cue{display:inline-block;margin-top:.4em;border-bottom:2px solid var(--teal);padding-bottom:1px}
+.ev-more summary:hover .ev-more-cue{border-bottom-color:var(--blue)}
+.ev-more summary:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:4px}
+/* One cue, two words, depending on state. */
+.cue-close{display:none}
+.ev-more[open] .cue-open{display:none}
+.ev-more[open] .cue-close{display:inline}
+.ev-add{margin:.6em 0 0}
+.ev-add a{text-decoration:none;border-bottom:2px solid var(--teal);padding-bottom:1px}
+.ev-add a:hover{border-bottom-color:var(--blue)}
+.ev-add a::before{content:"+";margin-right:.4em;font-weight:400}
+.ev-add-bare{margin-top:.5em}
+
+/* Printing a calendar should print all of it. */
+@media print{
+  .ev-clamp{display:block!important;overflow:visible!important}
+  .ev-more-cue{display:none}
+  .ev-add{display:none}
+}
 @media(max-width:600px){.ev{grid-template-columns:1fr;gap:2px}.ev-time{padding-top:0}}
 
 /* ---------- Two-column content pairs (home page) ---------- */

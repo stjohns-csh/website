@@ -114,13 +114,41 @@
     var html = '', lastDay = '';
     evs.forEach(function(e){
       if (e.dayLabel !== lastDay) { html += '<p class="ev-day">' + esc(e.dayLabel) + '</p>'; lastDay = e.dayLabel; }
+      // Descriptions on the parish calendar run to a median of ~380 characters
+      // and as long as 1,250. Printed in full they bury the thing people came
+      // for, which is the dates. So: two lines, then a disclosure.
+      //
+      // <details>/<summary> rather than a script-driven panel: it opens with
+      // JavaScript off, needs no escape key or focus trapping, and keeps the
+      // reader's place in a three-month list.
+      //
+      // The description is written ONCE, inside the summary. Closed, CSS clamps
+      // it to two lines; open, the clamp is released. Writing it twice — a
+      // teaser and a full copy — is how those two silently drift apart.
       var detail = '';
       if (e.description) {
-        detail = '<p class="ev-desc">' + esc(e.description) + '</p>';
-        if (e.seriesDates) { detail += '<p class="ev-series">Runs ' + esc(e.seriesDates) + '</p>'; }
+        detail =
+          '<details class="ev-more">' +
+            '<summary>' +
+              '<span class="ev-desc ev-clamp">' + esc(e.description) + '</span>' +
+              '<span class="ev-more-cue">' +
+                '<span class="cue-open">Learn more</span>' +
+                '<span class="cue-close">Show less</span>' +
+              '</span>' +
+            '</summary>' +
+            '<div class="ev-more-body">' +
+              (e.seriesDates ? '<p class="ev-series">Runs ' + esc(e.seriesDates) + '</p>' : '') +
+              '<p class="ev-add"><a href="/api/event.ics?slug=' + encodeURIComponent(e.slug) + '">' +
+                'Add to calendar</a></p>' +
+            '</div>' +
+          '</details>';
       } else if (e.seriesOf) {
         detail = '<p class="ev-series"><a href="#' + esc(e.seriesOf) + '">Details for ' +
                  esc(e.seriesTitle) + ' &uarr;</a></p>';
+      } else {
+        // Nothing to expand, but the event is still worth diarising.
+        detail = '<p class="ev-add ev-add-bare"><a href="/api/event.ics?slug=' +
+                 encodeURIComponent(e.slug) + '">Add to calendar</a></p>';
       }
       html += '<div class="ev" id="' + esc(e.slug) + '"><div class="ev-time">' + esc(e.timeLabel) + '</div><div>' +
               '<p class="ev-title">' + esc(e.title) + '</p>' +
@@ -133,6 +161,12 @@
     // so scroll to the requested event ourselves once it exists.
     if (location.hash.length > 1) {
       var target = document.getElementById(location.hash.slice(1));
+      // A link from At St. John's points at one event: open it rather than
+      // handing someone two clamped lines and a "Learn more" to press.
+      if (target) {
+        var d = target.querySelector('.ev-more');
+        if (d) d.open = true;
+      }
       if (target) target.scrollIntoView({ block: 'center' });
     }
   }).catch(function(){

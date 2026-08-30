@@ -84,7 +84,12 @@ function publicItem(t, { full }) {
   const item = {
     slug: String(t.web_slug || "").trim(),
     title: toText(t.title),
-    category: toText(t.category),
+    // The SUBJECT, which is `wp_category` — the field the Curator's Categorize
+    // editor writes and the field the page's chips are named after. NOT
+    // `category`, which holds the newsletter section ("This Week & Upcoming")
+    // and would match none of the filters. The `wp_` prefix is a fossil of the
+    // dead WordPress site; the column itself is very much alive.
+    category: toText(t.wp_category),
     type: toText(t.type),
     byline: toText(t.byline),
     date: when.iso,

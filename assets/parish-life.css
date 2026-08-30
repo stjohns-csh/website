@@ -222,7 +222,12 @@
 .subhero-reading h1 {
   font-size: clamp(2rem, 4.4vw, 2.8rem);
   max-width: var(--pl-measure);
-  margin-left: auto; margin-right: auto;
+  /* Left-aligned to the logo's edge, not centred in the wrap (27 Aug 2026).
+     One left edge for the whole page — logo, title, standfirst, filter chips
+     and every headline. It also sits the title in the darkest part of the
+     overlay, which is built left-heavy, so the contrast improves rather than
+     just the geometry. */
+  margin-left: 0; margin-right: 0;
   text-shadow: 0 2px 18px rgba(0,20,40,.55);
 }
 .pl-lede {
@@ -231,7 +236,7 @@
   font-size: 1.22rem;
   line-height: 1.4;
   color: #eaf1f8;
-  margin: .5em auto 0;
+  margin: .5em 0 0;
   max-width: var(--pl-measure);
   text-shadow: 0 1px 14px rgba(0,20,40,.6);
 }
@@ -250,8 +255,9 @@
 main > section:first-child { padding-top: 26px; }
 
 /* The filter and the count share a line, and everything in the column
-   shares one left edge. */
-.pl-bar, .pl-list { max-width: var(--pl-measure); margin-left: auto; margin-right: auto; }
+   shares one left edge — the same edge as the logo and the masthead title.
+   Moving the title alone would have given the page two left edges. */
+.pl-bar, .pl-list { max-width: var(--pl-measure); margin-left: 0; margin-right: 0; }
 .pl-bar {
   display: flex; align-items: baseline; justify-content: space-between;
   gap: 18px; flex-wrap: wrap;
