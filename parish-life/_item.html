@@ -92,7 +92,7 @@
 </header>
 <div class="subhero subhero-reading"><div class="wrap"><h1>Parish Life</h1><p class="pl-lede">The work behind the scenes, the ministries at work, and stories worth sharing.</p></div></div>
 <main>
-<section><div class="wrap">
+<section><div class="wrap pl-reading">
 <article class="pl-article" id="pl-article">
 <p class="pl-meta" id="pl-meta"></p>
 <h1 id="pl-title">Parish Life</h1>
@@ -101,6 +101,17 @@
 <p class="pl-signoff" id="pl-signoff" hidden></p>
 <a class="pl-back" href="/parish-life/">&larr; All of Parish Life</a>
 </article>
+<aside class="pl-rail" id="pl-rail" aria-label="More from Parish Life" hidden>
+<h2>More from Parish Life</h2>
+<div class="pl-filter pl-rail-filter" id="pl-rail-filter" role="group" aria-label="Filter by category">
+<button type="button" data-filter="all" aria-pressed="true">All</button>
+<button type="button" data-filter="Buildings &amp; Grounds" aria-pressed="false">B&amp;G</button>
+<button type="button" data-filter="Outreach &amp; Mission" aria-pressed="false">Outreach</button>
+<button type="button" data-filter="Christian Formation" aria-pressed="false">Formation</button>
+</div>
+<ul class="pl-rail-list" id="pl-rail-list"></ul>
+<a class="pl-rail-all" href="/parish-life/">See all of Parish Life &rarr;</a>
+</aside>
 </div></section>
 </main>
 <footer><div class="wrap"><div class="cols" id="foot-cols">
@@ -196,6 +207,64 @@ Church information <span class="chev" aria-hidden="true">&#9662;</span></button>
     p.textContent = message;
     body.appendChild(p);
   }
+
+  // The rail on the right: everything else in Parish Life, so the wide
+  // measure next to a single column of text isn't just left empty. It shares
+  // the /api/parish-life list endpoint the index page already uses -- a
+  // second small fetch, not a new endpoint -- and stays hidden entirely
+  // rather than show itself with nothing in it (a lone piece with no
+  // companions yet, or the feed failing) since an empty rail reads as
+  // broken, not quiet.
+  function loadRail(currentSlug) {
+    var rail    = document.getElementById('pl-rail');
+    var listEl  = document.getElementById('pl-rail-list');
+    var filterEl = document.getElementById('pl-rail-filter');
+    if (!rail || !listEl) return;
+
+    fetch('/api/parish-life')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        var items = ((data && data.items) || []).filter(function (it) {
+          return it.slug !== currentSlug;
+        });
+        if (!items.length) return; // stays hidden
+
+        var RAIL_CAP = 12;
+        items.slice(0, RAIL_CAP).forEach(function (it) {
+          var li = document.createElement('li');
+          li.dataset.category = it.category || '';
+          var a = document.createElement('a');
+          a.href = '/parish-life/' + it.slug + '/';
+          var t = document.createElement('time');
+          if (it.date) t.setAttribute('datetime', it.date);
+          t.textContent = it.dateLabel || it.date || '';
+          a.appendChild(t);
+          a.appendChild(document.createElement('br'));
+          a.appendChild(document.createTextNode(it.title));
+          li.appendChild(a);
+          listEl.appendChild(li);
+        });
+
+        var btns = Array.prototype.slice.call(filterEl.querySelectorAll('button'));
+        btns.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var f = btn.dataset.filter;
+            btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+            Array.prototype.slice.call(listEl.querySelectorAll('li')).forEach(function (li) {
+              li.hidden = !(f === 'all' || li.dataset.category === f);
+            });
+          });
+        });
+
+        rail.hidden = false;
+      })
+      .catch(function () {
+        // The article itself already loaded (or is loading); a rail that
+        // fails to fetch just stays hidden rather than showing an error
+        // next to a piece that came through fine.
+      });
+  }
+  loadRail(slug);
 
   if (!slug) { fail('We could not find that page', 'Try the list of everything in Parish Life below.'); return; }
 

@@ -161,6 +161,78 @@
    with a tall image. */
 .pl-signoff { clear: both; }
 
+/* The article and its rail of other pieces, side by side once there's
+   room. Below the breakpoint the rail simply falls in the DOM after the
+   article -- no extra CSS needed to stack it. */
+@media (min-width: 960px) {
+  .pl-reading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 64px;
+    align-items: start;
+  }
+  .pl-reading .pl-article { max-width: none; }
+}
+
+.pl-rail {
+  padding-top: 12px;
+}
+@media (min-width: 960px) {
+  .pl-rail { padding-top: 6px; border-top: none; }
+}
+.pl-rail h2 {
+  font-family: var(--body);
+  font-weight: 700;
+  font-size: .78rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--soft);
+  margin: 0 0 14px;
+}
+.pl-rail-filter { gap: 4px 16px; margin: 0 0 18px; }
+.pl-rail-filter button { font-size: .7rem; }
+.pl-rail-list {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+}
+.pl-rail-list li {
+  border-top: 1px solid var(--rule);
+  padding: 14px 0;
+}
+.pl-rail-list li:last-child { padding-bottom: 0; }
+.pl-rail-list a {
+  display: block;
+  text-decoration: none;
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+.pl-rail-list a:hover { color: var(--blue); }
+.pl-rail-list time {
+  display: block;
+  font-family: var(--body);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-size: .72rem;
+  color: var(--soft);
+  margin-bottom: 3px;
+}
+.pl-rail-all {
+  display: inline-block;
+  font-family: var(--body);
+  font-weight: 700;
+  font-size: .78rem;
+  letter-spacing: .06em;
+  color: var(--blue);
+  text-decoration: none;
+  border-bottom: 2px solid var(--teal);
+  padding-bottom: 3px;
+}
+
 .pl-signoff {
   border-top: 1px solid var(--rule);
   margin: 44px 0 0;
