@@ -146,6 +146,21 @@
   padding: .06em .09em 0 0;
 }
 
+/* A reading-page photo sits to the right of the text and the paragraphs
+   wrap around it, rather than running full-width above the piece. This
+   only touches the article view -- .pl-thumb on the listing cards (full-
+   width, above the excerpt) is untouched by the extra specificity here. */
+.pl-article .pl-thumb {
+  float: right;
+  display: block;
+  width: min(300px, 42%);
+  margin: 4px 0 20px 28px;
+}
+.pl-article .pl-thumb img { width: 100%; height: auto; }
+/* The byline always starts clear of the photo, even on a short piece
+   with a tall image. */
+.pl-signoff { clear: both; }
+
 .pl-signoff {
   border-top: 1px solid var(--rule);
   margin: 44px 0 0;
@@ -176,6 +191,7 @@
   .pl-filter button { font-size: .72rem; letter-spacing: .08em; padding: 5px 0 7px; }
   .pl-article h1 { max-width: none; }
   .pl-standfirst { max-width: none; font-size: 1.2rem; }
+  .pl-article .pl-thumb { float: none; width: 100%; margin: 0 0 22px; }
 }
 
 /* ============================================================
