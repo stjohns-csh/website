@@ -60,9 +60,42 @@
   border-top: 1px solid var(--rule);
   padding: 58px 0 0;
   margin: 58px 0 0;
+  /* Contains the floated thumbnail below -- without this, a photo taller
+     than the excerpt text would spill past this item's own border/margin
+     and crowd the next one. */
+  display: flow-root;
 }
 .pl-item:first-child { border-top: 0; padding-top: 0; margin-top: 34px; }
 .pl-item[hidden] { display: none; }
+
+/* A listing thumbnail is small, square and cropped to fit -- unlike the
+   reading page's photo, which keeps its natural shape and size. Odd and
+   even items float the photo to opposite sides so a long list reads with
+   some rhythm rather than every card looking identical; most items will
+   have no photo at all and are untouched by any of this. */
+:root { --pl-list-thumb: 160px; }
+.pl-list .pl-item .pl-thumb {
+  display: block;
+  width: var(--pl-list-thumb);
+  aspect-ratio: 1 / 1;
+  margin: 4px 0 18px;
+  overflow: hidden;
+  background: var(--warm);
+}
+.pl-list .pl-item .pl-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.pl-list .pl-item:nth-child(odd) .pl-thumb {
+  float: right;
+  margin-left: 26px;
+}
+.pl-list .pl-item:nth-child(even) .pl-thumb {
+  float: left;
+  margin-right: 26px;
+}
 
 .pl-meta {
   font-family: var(--body);
@@ -264,6 +297,14 @@
   .pl-article h1 { max-width: none; }
   .pl-standfirst { max-width: none; font-size: 1.2rem; }
   .pl-article .pl-thumb { float: none; width: 100%; margin: 0 0 22px; }
+  .pl-list .pl-item:nth-child(odd) .pl-thumb,
+  .pl-list .pl-item:nth-child(even) .pl-thumb {
+    /* Matches the specificity of the alternating float rule above so this
+       actually wins on mobile instead of silently losing to it. */
+    float: none;
+    width: 112px;
+    margin: 0 0 14px;
+  }
 }
 
 /* ============================================================
@@ -376,6 +417,23 @@ main > section:first-child { padding-top: 26px; }
   /* The empty-state message is a single line and should not be trapped in one
      half of the grid. */
   .pl-empty { grid-column: 1 / -1; }
+
+  /* Below 900px (a single column) the thumbnail just alternates card by card
+     for rhythm -- see the base rule above. Once the grid is two columns wide,
+     that stops making sense on its own terms and this takes over instead:
+     each photo points to the outer edge of its own column (left column ->
+     image left, right column -> image right) and the text wraps toward the
+     gutter in the middle, so the two columns read as a mirrored pair rather
+     than a coincidence of odd/even. Odd items fall in the left column and
+     even items in the right, since the grid fills left-to-right, row by row. */
+  .pl-list .pl-item:nth-child(odd) .pl-thumb {
+    float: left;
+    margin: 4px 26px 18px 0;
+  }
+  .pl-list .pl-item:nth-child(even) .pl-thumb {
+    float: right;
+    margin: 4px 0 18px 26px;
+  }
 }
 .pl-bar {
   display: flex; align-items: baseline; justify-content: space-between;
