@@ -39,18 +39,34 @@ function toText(s) {
     .replace(/&#39;|&apos;/gi, "’").replace(/&quot;/gi, '"')
     .replace(/&mdash;/gi, "—").replace(/&ndash;/gi, "–")
     .replace(/\r\n?/g, "\n")
+    // A "blank" line separating two paragraphs sometimes isn't quite blank —
+    // a stray trailing space left by a textarea or a paste (common in the
+    // Curator's long-version editor and the public form alike) means the
+    // line doesn't match a literal \n\n, so the paragraph break silently
+    // disappears and two paragraphs run together. Strip trailing spaces/tabs
+    // off every line first so a line with only whitespace on it still counts
+    // as blank.
+    .replace(/[ \t]+\n/g, "\n")
     .replace(/[ \t]+/g, " ")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
 
 function paragraphs(s) {
-  return toText(s).split(/\n{2,}/).map((p) => p.replace(/\n/g, " ").trim()).filter(Boolean);
+  // A blank line (two-or-more newlines) is a real paragraph break. A single
+  // newline is kept AS a newline, not flattened to a space, because most
+  // people writing in a plain textbox press Enter once between lines and
+  // never learn that this renderer used to require a truly blank line to
+  // notice. The page turns these embedded single newlines into <br>s within
+  // a paragraph; only a blank line starts a new one.
+  return toText(s).split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
 }
 
 // Roughly 200 characters, but cut at a word and never mid-sentence-fragment.
 function excerpt(s) {
-  const flat = paragraphs(s).join(" ");
+  // The excerpt is a single line of teaser text, so — unlike paragraphs()
+  // above — every newline here really does become a space.
+  const flat = paragraphs(s).map((p) => p.replace(/\n/g, " ")).join(" ");
   if (flat.length <= 200) return flat;
   const cut = flat.slice(0, 200);
   const space = cut.lastIndexOf(" ");

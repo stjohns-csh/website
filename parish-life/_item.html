@@ -312,9 +312,16 @@ Church information <span class="chev" aria-hidden="true">&#9662;</span></button>
         art.insertBefore(fig, body);
       }
 
+      // A blank line in the source is a new <p>; a single newline within
+      // one is a <br> — built with createElement/createTextNode, never
+      // innerHTML, so this stays exactly as safe as the textContent version
+      // it replaces (see the note at the top of this script).
       (item.paragraphs || []).forEach(function (text) {
         var p = document.createElement('p');
-        p.textContent = text;
+        String(text).split('\n').forEach(function (line, i) {
+          if (i > 0) p.appendChild(document.createElement('br'));
+          p.appendChild(document.createTextNode(line));
+        });
         body.appendChild(p);
       });
 
