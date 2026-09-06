@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Add the "St. John's Family of Websites" bar to the bottom of the footer,
-in every HTML file.
+"""Add the "St. John's Family of Websites" bar to the footer, just above the
+diocese/social-icons line, in every HTML file.
 
 Header, nav and footer are duplicated across all pages, so this is done by
 script rather than by hand. Safe to run more than once: the block is
@@ -20,7 +20,7 @@ START = "<!-- family-bar:start -->"
 END = "<!-- family-bar:end -->"
 BLOCK_RE = re.compile(re.escape(START) + r".*?" + re.escape(END) + r"\n?", re.S)
 
-ANCHOR = "<!-- footer-socials:end -->\n"
+ANCHOR = "<!-- footer-socials:start -->\n"
 
 BLOCK = (
     START + "\n"
@@ -44,9 +44,9 @@ def update(path: pathlib.Path, check: bool) -> str:
     if BLOCK_RE.search(html):
         html = BLOCK_RE.sub(BLOCK, html, count=1)
     elif ANCHOR in html:
-        html = html.replace(ANCHOR, ANCHOR + BLOCK, 1)
+        html = html.replace(ANCHOR, BLOCK + ANCHOR, 1)
     else:
-        return "SKIPPED: no footer-socials:end anchor"
+        return "SKIPPED: no footer-socials:start anchor"
 
     if html == before:
         return "no change"
