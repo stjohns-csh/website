@@ -312,3 +312,31 @@ color:var(--soft);font-size:1rem}
 text-transform:uppercase;color:var(--soft)}
 .legal{max-width:72ch;margin:2em 0 0;padding-top:1.2em;border-top:1px solid var(--rule);
 color:var(--soft);font-size:.95rem}
+
+/* ===== Spiritual Practices (BlueGreen Theology tools) ===== */
+.tools-intro{margin:0 0 2.6em}
+.tools-section{margin-top:2.6em}
+.tools-section-note{max-width:64ch;color:var(--soft);margin:0 0 1.6em}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:26px}
+.tool-card{display:block;padding:26px 26px 24px;background:var(--warm);border-top:3px solid var(--teal);
+  text-decoration:none;color:inherit;transition:border-color .18s,transform .18s}
+.tool-card:hover,.tool-card:focus-visible{border-top-color:var(--blue);transform:translateY(-2px)}
+.tool-eyebrow{font-family:var(--body);font-weight:700;font-size:.72rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--soft);margin:0 0 .6em}
+.tool-card h4{font-family:var(--display);font-weight:600;font-size:1.35rem;line-height:1.2;
+  margin:0 0 .45em;color:var(--blue)}
+.tool-card p{margin:0 0 1em;color:var(--ink);font-size:.98rem}
+.tool-cue{font-family:var(--body);font-weight:700;font-size:.8rem;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--blue);border-bottom:2px solid var(--teal);padding-bottom:1px}
+.tool-card:hover .tool-cue,.tool-card:focus-visible .tool-cue{border-bottom-color:var(--blue)}
+.tool-season{display:inline-block;margin-left:.5em;font-size:.66rem;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--blue);background:rgba(0,70,135,.09);padding:.2em .6em;border-radius:99px}
+
+/* ===== Family of parish websites (footer) ===== */
+.family-bar{background:var(--blue-dark);border-top:1px solid rgba(255,255,255,.12)}
+.family-bar .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:baseline;padding:16px 28px}
+.family-label{font-family:var(--body);font-weight:700;font-size:.72rem;letter-spacing:.13em;
+  text-transform:uppercase;color:#a9c0da;margin-right:6px}
+.family-bar nav{display:flex;flex-wrap:wrap;gap:6px 22px}
+.family-bar nav a{color:#e7eef6;font-size:.9rem;text-decoration:none;border-bottom:1px solid transparent}
+.family-bar nav a:hover,.family-bar nav a:focus-visible{border-bottom-color:#e7eef6}
