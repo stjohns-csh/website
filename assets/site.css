@@ -333,10 +333,11 @@ color:var(--soft);font-size:.95rem}
   text-transform:uppercase;color:var(--blue);background:rgba(0,70,135,.09);padding:.2em .6em;border-radius:99px}
 
 /* ===== Family of parish websites (footer) ===== */
-.family-bar{background:var(--blue-dark);border-top:1px solid rgba(255,255,255,.12)}
-.family-bar .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:baseline;padding:16px 28px}
+.family-bar{border-top:1px solid rgba(255,255,255,.14)}
+.family-bar .wrap{display:flex;flex-wrap:wrap;gap:6px 22px;align-items:baseline;
+  justify-content:center;text-align:center;padding:14px 28px}
 .family-label{font-family:var(--body);font-weight:700;font-size:.72rem;letter-spacing:.13em;
-  text-transform:uppercase;color:#a9c0da;margin-right:6px}
-.family-bar nav{display:flex;flex-wrap:wrap;gap:6px 22px}
+  text-transform:uppercase;color:#a9c0da;margin-right:2px}
+.family-bar nav{display:flex;flex-wrap:wrap;gap:6px 22px;justify-content:center}
 .family-bar nav a{color:#e7eef6;font-size:.9rem;text-decoration:none;border-bottom:1px solid transparent}
 .family-bar nav a:hover,.family-bar nav a:focus-visible{border-bottom-color:#e7eef6}
