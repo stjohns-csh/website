@@ -148,6 +148,21 @@
 /* ---------- A single article ---------- */
 .pl-article { max-width: 62ch; }
 .pl-article .pl-meta { margin-bottom: 1.4em; }
+.pl-add-calendar { margin: -.6em 0 1.6em; }
+.pl-add-calendar a {
+  display: inline-block;
+  font-family: var(--body);
+  font-weight: 700;
+  font-size: .78rem;
+  letter-spacing: .04em;
+  color: #fff;
+  background: var(--blue);
+  text-decoration: none;
+  border-radius: 999px;
+  padding: 9px 20px;
+}
+.pl-add-calendar a:hover { background: var(--teal); }
+.pl-add-calendar a:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
 .pl-article h1 {
   font-family: var(--display);
   font-weight: 600;

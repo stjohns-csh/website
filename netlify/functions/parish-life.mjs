@@ -111,7 +111,16 @@ function publicItem(t, { full }) {
     date: when.iso,
     dateLabel: when.label,
     image: sized(t.image_url, full ? 1600 : 800),
-    excerpt: excerpt(source)
+    excerpt: excerpt(source),
+    // Google's own "view this event" page for the calendar event the Curator
+    // linked this tout to (see publish.js / lib/calendar.js — gcal_event_url
+    // is Google Calendar's htmlLink, not something built here). It is the
+    // real, live event: a reschedule on the parish calendar is reflected the
+    // moment someone opens the link, unlike a static .ics file this page
+    // would otherwise have to generate from a human-typed, unparseable
+    // date_time string. Present only for touts the Curator has linked to an
+    // actual calendar event; a tout with no link simply has no button.
+    calendarUrl: String(t.gcal_event_url || "").trim() || null
   };
 
   if (full) {
@@ -119,6 +128,49 @@ function publicItem(t, { full }) {
     item.paragraphs = paragraphs(source);
   }
   return item;
+}
+
+// A warm Netlify Function instance is reused across requests as long as
+// traffic keeps arriving (typically minutes at a time). This module-scope
+// cache holds the last successful sheet read so back-to-back requests to a
+// warm instance — most notably the two calls one Parish Life article page
+// used to make (item + rail) — skip the Apps Script round trip entirely
+// instead of each paying its own 2-3 second cost. It is memory only: a cold
+// start or a new instance simply refetches, and nothing here is a substitute
+// for the CDN cache-control headers below, which are what protect a visitor
+// hitting a *different* edge node or a cold instance.
+const SHEET_CACHE_MS = 5 * 60 * 1000; // 5 minutes — matches max-age below
+let sheetCache = { at: 0, published: null };
+
+async function getPublished(webhook) {
+  const now = Date.now();
+  if (sheetCache.published && now - sheetCache.at < SHEET_CACHE_MS) {
+    return sheetCache.published;
+  }
+
+  const res = await fetch(webhook + "?action=list&status=*");
+  if (!res.ok) throw new Error("sheet webhook returned " + res.status);
+  const data = await res.json();
+  if (!data || data.ok === false) throw new Error(data && data.error ? String(data.error) : "sheet said no");
+
+  const rows = Array.isArray(data.touts) ? data.touts : [];
+
+  // The gate. An item reaches the public page only if it has been published
+  // to the website AND has a slug to live at — a row missing either is a
+  // half-finished edit, not a page.
+  const published = rows.filter((t) =>
+    String(t.web_status || "").trim().toLowerCase() === "published" &&
+    String(t.web_slug || "").trim()
+  );
+
+  // Newest first, on the website publish date rather than when the blurb
+  // arrived in the Workshop.
+  published.sort((a, b) =>
+    String(b.web_published_at || "").localeCompare(String(a.web_published_at || ""))
+  );
+
+  sheetCache = { at: now, published };
+  return published;
 }
 
 export default async (request) => {
@@ -138,31 +190,25 @@ export default async (request) => {
   const wanted = new URL(request.url).searchParams.get("slug");
 
   try {
-    const res = await fetch(webhook + "?action=list&status=*");
-    if (!res.ok) throw new Error("sheet webhook returned " + res.status);
-    const data = await res.json();
-    if (!data || data.ok === false) throw new Error(data && data.error ? String(data.error) : "sheet said no");
-
-    const rows = Array.isArray(data.touts) ? data.touts : [];
-
-    // The gate. An item reaches the public page only if it has been published
-    // to the website AND has a slug to live at — a row missing either is a
-    // half-finished edit, not a page.
-    const published = rows.filter((t) =>
-      String(t.web_status || "").trim().toLowerCase() === "published" &&
-      String(t.web_slug || "").trim()
-    );
-
-    // Newest first, on the website publish date rather than when the blurb
-    // arrived in the Workshop.
-    published.sort((a, b) =>
-      String(b.web_published_at || "").localeCompare(String(a.web_published_at || ""))
-    );
+    const published = await getPublished(webhook);
 
     if (wanted) {
       const hit = published.find((t) => String(t.web_slug).trim() === wanted);
       if (!hit) return new Response(JSON.stringify({ item: null }), { headers, status: 404 });
-      return new Response(JSON.stringify({ item: publicItem(hit, { full: true }) }), { headers });
+
+      // The reading page's "More from Parish Life" rail used to fire its own
+      // second request to this same endpoint for this same data. Folding the
+      // rest of the list in here — brief, not full — means one fetch now
+      // serves both the article and the rail, instead of two separate calls
+      // to a slow upstream.
+      const related = published
+        .filter((t) => t !== hit)
+        .map((t) => publicItem(t, { full: false }));
+
+      return new Response(
+        JSON.stringify({ item: publicItem(hit, { full: true }), related }),
+        { headers }
+      );
     }
 
     return new Response(

@@ -97,6 +97,7 @@
 <article class="pl-article" id="pl-article">
 <p class="pl-meta" id="pl-meta"></p>
 <h1 id="pl-title">Parish Life</h1>
+<p class="pl-add-calendar" id="pl-add-calendar" hidden><a id="pl-add-calendar-link" href="#" target="_blank" rel="noopener">Add to your calendar</a></p>
 <p class="pl-standfirst" id="pl-standfirst" hidden></p>
 <div class="pl-body" id="pl-body"></div>
 <p class="pl-signoff" id="pl-signoff" hidden></p>
@@ -227,62 +228,51 @@ Church information <span class="chev" aria-hidden="true">&#9662;</span></button>
   }
 
   // The rail on the right: everything else in Parish Life, so the wide
-  // measure next to a single column of text isn't just left empty. It shares
-  // the /api/parish-life list endpoint the index page already uses -- a
-  // second small fetch, not a new endpoint -- and stays hidden entirely
-  // rather than show itself with nothing in it (a lone piece with no
+  // measure next to a single column of text isn't just left empty. It used
+  // to fire its own separate call to /api/parish-life to get that list —
+  // a second hit to the same slow upstream (the Apps Script webhook behind
+  // the sheet) on every single article view. The item endpoint now returns
+  // the rest of the list alongside the article (see `related` below), so
+  // this just renders what the one fetch already brought back, and stays
+  // hidden entirely if there's nothing to show (a lone piece with no
   // companions yet, or the feed failing) since an empty rail reads as
   // broken, not quiet.
-  function loadRail(currentSlug) {
+  function renderRail(items) {
     var rail    = document.getElementById('pl-rail');
     var listEl  = document.getElementById('pl-rail-list');
     var filterEl = document.getElementById('pl-rail-filter');
     if (!rail || !listEl) return;
+    if (!items || !items.length) return; // stays hidden
 
-    fetch('/api/parish-life')
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (data) {
-        var items = ((data && data.items) || []).filter(function (it) {
-          return it.slug !== currentSlug;
+    var RAIL_CAP = 12;
+    items.slice(0, RAIL_CAP).forEach(function (it) {
+      var li = document.createElement('li');
+      li.dataset.category = it.category || '';
+      var a = document.createElement('a');
+      a.href = '/parish-life/' + it.slug + '/';
+      var t = document.createElement('time');
+      if (it.date) t.setAttribute('datetime', it.date);
+      t.textContent = it.dateLabel || it.date || '';
+      a.appendChild(t);
+      a.appendChild(document.createElement('br'));
+      a.appendChild(document.createTextNode(it.title));
+      li.appendChild(a);
+      listEl.appendChild(li);
+    });
+
+    var btns = Array.prototype.slice.call(filterEl.querySelectorAll('button'));
+    btns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var f = btn.dataset.filter;
+        btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+        Array.prototype.slice.call(listEl.querySelectorAll('li')).forEach(function (li) {
+          li.hidden = !(f === 'all' || li.dataset.category === f);
         });
-        if (!items.length) return; // stays hidden
-
-        var RAIL_CAP = 12;
-        items.slice(0, RAIL_CAP).forEach(function (it) {
-          var li = document.createElement('li');
-          li.dataset.category = it.category || '';
-          var a = document.createElement('a');
-          a.href = '/parish-life/' + it.slug + '/';
-          var t = document.createElement('time');
-          if (it.date) t.setAttribute('datetime', it.date);
-          t.textContent = it.dateLabel || it.date || '';
-          a.appendChild(t);
-          a.appendChild(document.createElement('br'));
-          a.appendChild(document.createTextNode(it.title));
-          li.appendChild(a);
-          listEl.appendChild(li);
-        });
-
-        var btns = Array.prototype.slice.call(filterEl.querySelectorAll('button'));
-        btns.forEach(function (btn) {
-          btn.addEventListener('click', function () {
-            var f = btn.dataset.filter;
-            btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
-            Array.prototype.slice.call(listEl.querySelectorAll('li')).forEach(function (li) {
-              li.hidden = !(f === 'all' || li.dataset.category === f);
-            });
-          });
-        });
-
-        rail.hidden = false;
-      })
-      .catch(function () {
-        // The article itself already loaded (or is loading); a rail that
-        // fails to fetch just stays hidden rather than showing an error
-        // next to a piece that came through fine.
       });
+    });
+
+    rail.hidden = false;
   }
-  loadRail(slug);
 
   if (!slug) { fail('We could not find that page', 'Try the list of everything in Parish Life below.'); return; }
 
@@ -290,6 +280,7 @@ Church information <span class="chev" aria-hidden="true">&#9662;</span></button>
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (data) {
       var item = data && data.item;
+      renderRail(data && data.related);
       if (!item) {
         fail('We could not find that page', 'That piece may have been renamed, or the link may have a typo in it. Everything we have published is on the Parish Life page.');
         return;
@@ -317,6 +308,19 @@ Church information <span class="chev" aria-hidden="true">&#9662;</span></button>
       }
 
       h1.textContent = item.title;
+
+      // Only present when the Curator has linked this tout to a real event
+      // on the parish calendar (see parish-life.mjs). The link goes straight
+      // to that event's own Google Calendar page, which is the live event --
+      // right for a reschedule in a way a page-generated .ics file wouldn't be.
+      if (item.calendarUrl) {
+        var calWrap = document.getElementById('pl-add-calendar');
+        var calLink = document.getElementById('pl-add-calendar-link');
+        if (calWrap && calLink) {
+          calLink.href = item.calendarUrl;
+          calWrap.hidden = false;
+        }
+      }
 
       if (item.standfirst) { sf.textContent = item.standfirst; sf.hidden = false; }
 
