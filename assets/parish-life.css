@@ -184,6 +184,8 @@
 }
 .pl-article .pl-body { font-size: 1.06rem; }
 .pl-article .pl-body p { margin: 0 0 1.25em; }
+.pl-article .pl-body ul { margin: 0 0 1.25em; padding-left: 1.4em; }
+.pl-article .pl-body li { margin: 0 0 .4em; }
 .pl-article .pl-body p:first-of-type::first-letter {
   font-family: var(--display);
   font-weight: 600;
