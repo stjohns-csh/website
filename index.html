@@ -371,9 +371,12 @@ So be swift to love, and make haste to be kind.</em><br>&mdash; based on a praye
   function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function niceDate(s){ try { var d = new Date(s); if (isNaN(d)) return ''; return new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',year:'numeric'}).format(d); } catch (e) { return ''; } }
   fetch('/api/newsletter').then(function(r){ return r.json(); }).then(function(d){
-    // The weekly issue, not a Sunday Reflection — which is what the block promises.
-    var it = (d.weekly || d.items || [])[0];
-    if (!it || !it.title) return;               // keep the default blurb
+    // Only the weekly "At St. John's" (or anything with "ASJ" in the title).
+    // Reflections and one-off campaigns (pastoral notes, alerts) stay out.
+    var it = (d.weekly || d.items || []).filter(function(i){
+      return i && i.title && (i.kind === 'weekly' || /\basj\b/i.test(i.title));
+    })[0];
+    if (!it) return;                            // keep the default blurb
     var html = '';
     if (it.image) html += '<a class="news-thumb" href="' + esc(it.link) + '"><img src="' + esc(it.image) + '" alt="" loading="lazy"></a>';
     html += '<p class="news-title"><a href="' + esc(it.link) + '">' + esc(it.title) + '</a></p>';
