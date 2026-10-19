@@ -114,9 +114,11 @@ function actionsFor(t) {
   const out = [];
   const label = toText(t.cta_label);
   if (label && !/^learn more$/i.test(label) && !/calendar/i.test(label)) {
-    // long_version and body only: the sheet's private `notes` are never read
-    // here. A link that lives only in notes is not shown on the page.
-    const url = firstUrl([t.long_version, t.body].filter(Boolean).join(" "));
+    // Same lookup, in the same order, as the newsletter (publish.js: notes,
+    // then long_version, then body), so the button on the page and the button
+    // in the email can never point at different places. Only the one link
+    // that was found leaves this function — the notes text itself never does.
+    const url = firstUrl([t.notes, t.long_version, t.body].filter(Boolean).join(" "));
     if (url) out.push({ label, url });
   }
   const label2 = toText(t.cta2_label);
