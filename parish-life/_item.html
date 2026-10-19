@@ -338,13 +338,26 @@ Church information <span class="chev" aria-hidden="true">&#9662;</span></button>
       // one is a <br> — built with createElement/createTextNode, never
       // innerHTML, so this stays exactly as safe as the textContent version
       // it replaces (see the note at the top of this script).
+      // A line that starts with "* ", "- " or "• " is a bullet. Consecutive
+      // bullet lines become one <ul>; any other lines stay a <p> with <br>s.
+      // Still createElement/createTextNode only, so it is as safe as before.
+      var BULLET = /^\s*[*\u2022-]\s+/;
       (item.paragraphs || []).forEach(function (text) {
-        var p = document.createElement('p');
-        String(text).split('\n').forEach(function (line, i) {
-          if (i > 0) p.appendChild(document.createElement('br'));
-          p.appendChild(document.createTextNode(line));
+        var p = null, ul = null;
+        String(text).split('\n').forEach(function (line) {
+          if (BULLET.test(line)) {
+            p = null;
+            if (!ul) { ul = document.createElement('ul'); body.appendChild(ul); }
+            var li = document.createElement('li');
+            li.appendChild(document.createTextNode(line.replace(BULLET, '')));
+            ul.appendChild(li);
+          } else {
+            ul = null;
+            if (!p) { p = document.createElement('p'); body.appendChild(p); }
+            else p.appendChild(document.createElement('br'));
+            p.appendChild(document.createTextNode(line));
+          }
         });
-        body.appendChild(p);
       });
 
       // Byline sits at the foot, as it does on the hand-built page.
