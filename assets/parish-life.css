@@ -163,7 +163,7 @@
 }
 .pl-add-calendar a:hover { background: var(--teal); }
 .pl-add-calendar a:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
-.pl-actions { margin: 1.6em 0 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.pl-actions { clear: both; margin: 1.6em 0 0; display: flex; flex-wrap: wrap; gap: 10px; }
 .pl-actions a {
   display: inline-block;
   font-family: var(--body);
