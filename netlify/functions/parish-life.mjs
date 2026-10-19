@@ -90,6 +90,43 @@ function dateParts(value) {
   return { iso: d.toISOString().slice(0, 10), label: DATE_FMT.format(d) };
 }
 
+// A button's destination comes from a sheet cell typed by staff, and this
+// endpoint is public. Only web, mail and phone links are ever passed on —
+// never javascript: or data: — and anything else is dropped, not repaired.
+function safeUrl(u) {
+  const s = String(u || "").trim();
+  return /^(https?:\/\/|mailto:|tel:)[^\s<>"']+$/i.test(s) ? s : "";
+}
+
+// Same rule the newsletter uses (publish.js, extractFirstUrl): the primary
+// button points at the first link in the piece's own text.
+function firstUrl(s) {
+  const m = String(s || "").match(/(?:https?:\/\/|mailto:|tel:)[^\s<>"']+/);
+  return m ? safeUrl(m[0].replace(/[).,;:]+$/, "")) : "";
+}
+
+// The newsletter's buttons, carried onto the page so a call to action in the
+// email is never missing from Parish Life. Returns only {label, url} pairs
+// that have BOTH — an unlinked button is clutter on a public page. The
+// calendar button is handled separately (calendarUrl), and "Learn More" in
+// the newsletter just points at this very page, so neither is repeated here.
+function actionsFor(t) {
+  const out = [];
+  const label = toText(t.cta_label);
+  if (label && !/^learn more$/i.test(label) && !/calendar/i.test(label)) {
+    // long_version and body only: the sheet's private `notes` are never read
+    // here. A link that lives only in notes is not shown on the page.
+    const url = firstUrl([t.long_version, t.body].filter(Boolean).join(" "));
+    if (url) out.push({ label, url });
+  }
+  const label2 = toText(t.cta2_label);
+  const url2 = safeUrl(t.cta2_url);
+  // Same destination twice (a primary and a second button pointing at one
+  // form) is one button, not two.
+  if (label2 && url2 && !out.some((a) => a.url === url2)) out.push({ label: label2, url: url2 });
+  return out;
+}
+
 // The whitelist. Everything the public sees is here and nowhere else.
 function publicItem(t, { full }) {
   const when = dateParts(t.web_published_at);
@@ -126,6 +163,7 @@ function publicItem(t, { full }) {
   if (full) {
     item.standfirst = toText(t.web_standfirst);
     item.paragraphs = paragraphs(source);
+    item.actions = actionsFor(t);
   }
   return item;
 }

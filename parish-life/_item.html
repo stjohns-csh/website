@@ -101,6 +101,7 @@
 <p class="pl-standfirst" id="pl-standfirst" hidden></p>
 <div class="pl-body" id="pl-body"></div>
 <p class="pl-signoff" id="pl-signoff" hidden></p>
+<p class="pl-actions" id="pl-actions" hidden></p>
 <a class="pl-back" href="/parish-life/">&larr; All of Parish Life</a>
 </article>
 <aside class="pl-rail" id="pl-rail" aria-label="More from Parish Life" hidden>
@@ -359,6 +360,22 @@ Church information <span class="chev" aria-hidden="true">&#9662;</span></button>
           }
         });
       });
+
+      // The newsletter's own buttons (e.g. "Submit a name"), so nothing the
+      // email asks readers to do is missing here. The feed only sends links
+      // that are web, mail or phone; the same check is repeated here.
+      var acts = document.getElementById('pl-actions');
+      if (acts && item.actions && item.actions.length) {
+        item.actions.forEach(function (a) {
+          if (!a || !a.label || !/^(https?:\/\/|mailto:|tel:)/i.test(a.url || '')) return;
+          var link = document.createElement('a');
+          link.href = a.url;
+          link.textContent = a.label + ' \u2192';
+          if (/^https?:/i.test(a.url)) { link.target = '_blank'; link.rel = 'noopener'; }
+          acts.appendChild(link);
+        });
+        if (acts.firstChild) acts.hidden = false;
+      }
 
       // Byline sits at the foot, as it does on the hand-built page.
       if (item.byline) {
