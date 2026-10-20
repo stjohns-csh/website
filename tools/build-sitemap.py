@@ -19,6 +19,10 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 SITE = "https://stjcsh.org"
 EXCLUDE = {"404.html"}
 
+# Unlisted pages: reachable by direct link or QR code only, and marked noindex.
+# They stay out of the sitemap so nothing points to them.
+UNLISTED_DIRS = {"ministry-sign-up"}
+
 # Pages a newcomer is most likely to want. Search engines treat priority as a
 # hint at best, but it costs nothing to say what matters.
 PRIORITY = {
@@ -59,6 +63,7 @@ def main() -> int:
         if ".git" not in p.parts
         and "node_modules" not in p.parts
         and p.name not in EXCLUDE
+        and not (UNLISTED_DIRS & set(p.relative_to(ROOT).parts))
     )
 
     lines = [
