@@ -21,7 +21,7 @@ EXCLUDE = {"404.html"}
 
 # Unlisted pages: reachable by direct link or QR code only, and marked noindex.
 # They stay out of the sitemap so nothing points to them.
-UNLISTED_DIRS = {"ministry-sign-up"}
+UNLISTED_DIRS = {"ministry-sign-up", "baptism-card"}
 
 # Pages a newcomer is most likely to want. Search engines treat priority as a
 # hint at best, but it costs nothing to say what matters.
