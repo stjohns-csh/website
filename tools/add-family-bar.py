@@ -27,8 +27,9 @@ BLOCK = (
     '<div class="family-bar"><div class="wrap">\n'
     '<span class="family-label">St. John&rsquo;s Family of Websites</span>\n'
     '<nav aria-label="St. John&rsquo;s family of websites">\n'
-    '<a href="https://bluegreentheology.org">BlueGreen Theology</a>\n'
+    '<a href="https://cemetery.stjcsh.org">St. John&rsquo;s Cemetery</a>\n'
     '<a href="https://concertsbythepond.org">Concerts by the Pond</a>\n'
+    '<a href="https://bluegreentheology.org">BlueGreen Theology</a>\n'
     '<a href="https://sjpwa.org">St. John&rsquo;s Pond Watershed Alliance</a>\n'
     '<a href="https://save-the-pond.org">Save the Pond</a>\n'
     "</nav>\n"
