@@ -19,7 +19,7 @@ import pathlib
 import re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-DRAFT = True
+DRAFT = False
 URL = "https://stjcsh.org/sermons/"
 DESC = ("Sermons from Sunday worship at St. John’s Episcopal Church, Cold Spring Harbor. "
         "Watch each one, starting at the moment the sermon begins.")
@@ -54,6 +54,7 @@ for prop in ("og:title", "twitter:title"):
 for prop in ("og:description", "twitter:description"):
     head = re.sub(r'(<meta (?:property|name)="%s" content=")[^"]*(">)' % prop, r"\g<1>%s\g<2>" % e(DESC), head, count=1)
 head = swap(head, '<a href="/worship/" aria-current="page">Worship</a>', '<a href="/worship/">Worship</a>')
+head = swap(head, '<li><a href="/sermons/">Sermons</a></li>', '<li><a href="/sermons/" aria-current="page">Sermons</a></li>')
 head = swap(head, "<h1>Worship</h1>", "<h1>Sermons</h1>")
 extra = '<link rel="stylesheet" href="/assets/parish-life.css">\n<link rel="stylesheet" href="/assets/sermons.css">\n'
 if DRAFT:
