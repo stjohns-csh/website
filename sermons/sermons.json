@@ -1,0 +1,22 @@
+{
+  "_about": "One entry per sermon, newest first. 'video' is the YouTube ID of the service (or of a sermon-only video); 'start' is the second the sermon begins (0 for a sermon-only video). 'preacher' is a key from 'preachers' below, taken from the preaching rota. 'asj' is the At St. John's issue date that carried the link. Add a row, run tools/build-sermons.py, done.",
+  "playlist": "https://www.youtube.com/playlist?list=PLLQ82jqNeBnDKasX8MTsz4e9XIuyEXsuT",
+  "preachers": {
+    "gideon": { "name": "The Rev. Gideon L. K. Pollach", "chip": "Gideon Pollach" },
+    "doug":   { "name": "The Rev. Dr. Douglas C. Mohrmann", "chip": "Doug Mohrmann" }
+  },
+  "sermons": [
+    { "date": "2026-10-18", "sunday": "Twenty-First Sunday after Pentecost", "title": "Whose Coin?",                     "preacher": "gideon", "video": "0dk2gER42Us", "start": 0,    "asj": "2026-10-22", "note": "sermon-only video" },
+    { "date": "2026-10-11", "sunday": "Twentieth Sunday after Pentecost",    "title": "Image, Idolatry, and Presence",   "preacher": "doug",   "video": "4OCJxfaps60", "start": 1476, "asj": "2026-10-15" },
+    { "date": "2026-10-04", "sunday": "Nineteenth Sunday after Pentecost",  "title": "Nothing Is Hidden",               "preacher": "gideon", "video": "Gsfc_JuOWy0", "start": 1361, "asj": "2026-10-11", "note": "in honor of St. Francis" },
+    { "date": "2026-09-27", "sunday": "Eighteenth Sunday after Pentecost",   "title": "Be Like Water",                   "preacher": "gideon", "video": "WPOEQWQ-5xU", "start": 1350, "asj": "2026-10-01" },
+    { "date": "2026-09-20", "sunday": "Seventeenth Sunday after Pentecost",  "title": "Whose Grace?",                    "preacher": "doug",   "video": "oALE7foDIVU", "start": 1176, "asj": "2026-09-24" },
+    { "date": "2026-09-13", "sunday": "Sixteenth Sunday after Pentecost",    "title": "Leave Your Old Backpack Here…",   "preacher": "gideon", "video": "ijcT4gAkUZ0", "start": 1121, "asj": "2026-09-17", "note": "Holy Baptism; check whether the title continues after the ellipsis" },
+    { "date": "2026-09-06", "sunday": "Fifteenth Sunday after Pentecost",    "title": "Town and Woodland",               "preacher": "doug",   "video": "XqUjswwM5v8", "start": 1388, "asj": "2026-09-10" },
+    { "date": "2026-08-30", "sunday": "Fourteenth Sunday after Pentecost",   "title": "",                                "preacher": "gideon", "video": "cW-Hkslpu_k", "start": 1268, "asj": "2026-09-03", "note": "ASJ gave no title" },
+    { "date": "2026-08-23", "sunday": "Thirteenth Sunday after Pentecost",   "title": "Who Am I and What Do I Do?",      "preacher": "doug",   "video": "5GoDW4aeLno", "start": 1030, "asj": "2026-08-27" },
+    { "date": "2026-08-16", "sunday": "Twelfth Sunday after Pentecost",      "title": "She Bent It: The Arc of the Moral Universe and the Canaanite Woman", "preacher": "gideon", "video": "wZS3gL_3lFw", "start": 1117, "asj": "2026-08-20" },
+    { "date": "2026-08-09", "sunday": "Eleventh Sunday after Pentecost",     "title": "Enough to Drown In",              "preacher": "gideon", "video": "sqw7MRgPN2w", "start": 1107, "asj": "2026-08-13" },
+    { "date": "2026-08-02", "sunday": "Tenth Sunday after Pentecost",        "title": "You Cannot Earn a Zinnia",        "preacher": "gideon", "video": "tKKMPwqfH2Y", "start": 840,  "asj": "2026-08-06", "note": "Holy Baptism" }
+  ]
+}
