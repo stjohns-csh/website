@@ -156,10 +156,20 @@ export function buildSermon(settings, oembedTitle, rota) {
 
 // The committed archive wins over anything read live, so a correction made in
 // sermons.json is never undone by the sheet.
+//
+// A service video carries one sermon, so the video id is the identity. That
+// matters because a sheet row can go stale: on 5 Nov an old row still held the
+// 25 Oct video, and read on its own it would have shown the same sermon a
+// second time under 18 Oct. Where one video turns up under more than one issue,
+// the most recent issue's row is the one that was last touched, so it wins.
 export function mergeSermons(archive, fresh) {
-  const k = (s) => s.video + "|" + s.start;
-  const have = new Set(archive.map(k));
-  const out = archive.slice();
-  fresh.forEach((s) => { if (s && !have.has(k(s))) { have.add(k(s)); out.push(s); } });
+  const have = new Set(archive.map((s) => s.video));
+  const newest = new Map();
+  fresh.forEach((s) => {
+    if (!s || have.has(s.video)) return;
+    const seen = newest.get(s.video);
+    if (!seen || String(s.asj) > String(seen.asj)) newest.set(s.video, s);
+  });
+  const out = archive.concat([...newest.values()]);
   return out.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
 }
