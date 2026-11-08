@@ -72,14 +72,14 @@ for s in data["sermons"]:
     vid, start = s["video"], int(s["start"])
     watch = "https://www.youtube.com/watch?v=%s" % vid + ("&t=%ds" % start if start else "")
     search_text = " ".join([heading, s["sunday"], p["name"], long_date(s["date"])]).lower()
-    cards.append(f"""<article class="sm-item" data-preacher="{e(s['preacher'])}" data-video="{e(vid)}" data-start="{start}" data-date="{e(s['date'])}" data-text="{e(search_text)}">
+    cards.append(f"""<article class="sm-item" id="{e(s['date'])}" data-preacher="{e(s['preacher'])}" data-video="{e(vid)}" data-start="{start}" data-date="{e(s['date'])}" data-text="{e(search_text)}">
 <div class="video-frame sm-video" data-video="{e(vid)}" data-start="{start}" data-title="{e(heading)}">
 <button type="button" class="video-facade" style="background-image:url(https://i.ytimg.com/vi/{e(vid)}/hqdefault.jpg)" aria-label="Play sermon: {e(heading)}"><span class="video-play" aria-hidden="true"></span></button>
 </div>
 <p class="pl-meta"><time datetime="{e(s['date'])}">{e(long_date(s['date']))}</time><span class="sep" aria-hidden="true">&bull;</span>{e(s['sunday'])}</p>
 <h3>{e(heading)}</h3>
 <p class="sm-by">{e(p['name'])}</p>
-<p class="sm-alt"><a href="{e(watch)}">Watch on YouTube</a></p>
+<p class="sm-alt"><a href="{e(watch)}">Watch on YouTube</a><span class="sep" aria-hidden="true">&bull;</span><button type="button" class="sm-share-btn" aria-expanded="false">Share</button></p>
 </article>""")
 
 chips = '<button type="button" data-filter="all" aria-pressed="true">All</button>\n'
@@ -167,9 +167,76 @@ SCRIPT = """<script>
     if (p) a.appendChild(el('p', 'sm-by', p.name));
     var alt = el('p', 'sm-alt'), link = el('a', '', 'Watch on YouTube');
     link.href = 'https://www.youtube.com/watch?v=' + s.video + (start ? '&t=' + start + 's' : '');
-    alt.appendChild(link); a.appendChild(alt);
+    alt.appendChild(link);
+    var sp = el('span', 'sep', '\\u2022'); sp.setAttribute('aria-hidden', 'true'); alt.appendChild(sp);
+    var sb = el('button', 'sm-share-btn', 'Share'); sb.type = 'button'; sb.setAttribute('aria-expanded', 'false');
+    alt.appendChild(sb);
+    a.appendChild(alt);
+    if (!document.getElementById(s.date)) a.id = s.date;
     return a;
   }
+
+  // Share. Phones and Safari open the system share sheet. Elsewhere a small
+  // panel offers Copy link and Email this. No third-party buttons or scripts.
+  var SHARE_BASE = 'https://stjcsh.org/sermons/#';
+  function closePanels(except) {
+    [].slice.call(list.querySelectorAll('.sm-share-panel')).forEach(function (p) {
+      if (p === except) return;
+      var b = p.parentNode.querySelector('.sm-share-btn');
+      if (b) b.setAttribute('aria-expanded', 'false');
+      p.parentNode.removeChild(p);
+    });
+  }
+  list.addEventListener('click', function (ev) {
+    var sb = ev.target.closest ? ev.target.closest('.sm-share-btn') : null;
+    if (!sb) return;
+    var it = sb.closest('.sm-item');
+    var title = it.querySelector('h3').textContent;
+    var url = SHARE_BASE + it.dataset.date;
+    var text = title + ' \\u2014 a sermon at St. John\\u2019s, Cold Spring Harbor.';
+    if (navigator.share) {
+      navigator.share({ title: title, text: text, url: url }).catch(function () {});
+      return;
+    }
+    var old = it.querySelector('.sm-share-panel');
+    closePanels(null);
+    if (old) return;
+    var panel = el('div', 'sm-share-panel');
+    var copy = el('button', 'sm-copy', 'Copy link'); copy.type = 'button';
+    var mail = el('a', 'sm-mail', 'Email this');
+    mail.href = 'mailto:?subject=' + encodeURIComponent(title) + '&body=' + encodeURIComponent(text + '\\n\\n' + url);
+    var note = el('span', 'sm-copied'); note.setAttribute('role', 'status');
+    copy.addEventListener('click', function () {
+      function done() { note.textContent = 'Link copied'; }
+      function manual() {
+        var box = document.createElement('input');
+        box.type = 'text'; box.readOnly = true; box.value = url; box.className = 'sm-url';
+        box.setAttribute('aria-label', 'Link to this sermon');
+        panel.appendChild(box); box.focus(); box.select();
+        note.textContent = 'Press Ctrl/Cmd+C to copy';
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, manual);
+      else manual();
+    });
+    panel.appendChild(copy); panel.appendChild(mail); panel.appendChild(note);
+    it.appendChild(panel);
+    sb.setAttribute('aria-expanded', 'true');
+  });
+
+  // A shared link (/sermons/#2026-10-04) scrolls to that sermon and marks it.
+  // Run again once live sermons have been added, in case it is one of those.
+  function goHash() {
+    var m = /^#(\\d{4}-\\d{2}-\\d{2})$/.exec(location.hash || '');
+    if (!m) return;
+    var t = document.getElementById(m[1]);
+    if (!t) return;
+    t.hidden = false;
+    [].slice.call(list.querySelectorAll('.sm-target')).forEach(function (x) { x.classList.remove('sm-target'); });
+    t.classList.add('sm-target');
+    t.scrollIntoView({ block: 'start' });
+  }
+  goHash();
+  window.addEventListener('hashchange', goHash);
   fetch('/api/sermons').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
     if (!d || !d.sermons) return;
     var have = {};
@@ -184,6 +251,7 @@ SCRIPT = """<script>
       added = true;
     });
     if (added) apply();
+    goHash();
   }).catch(function () {});
 })();
 </script>"""

@@ -23,5 +23,15 @@
 .sm-by { margin: 0 0 .3em; color: var(--ink); font-size: 1rem; }
 .sm-alt { margin: 0; font-size: .9rem; }
 .sm-alt a { color: var(--soft); }
+.sm-alt .sep { margin: 0 .55em; color: var(--soft); }
+.sm-share-btn, .sm-copy { font: inherit; font-size: .9rem; color: var(--blue); background: none; border: 0;
+  padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.sm-share-btn:focus-visible, .sm-copy:focus-visible, .sm-mail:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.sm-share-panel { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin: 12px 0 0;
+  padding: 10px 14px; background: #fff; border: 1px solid var(--rule); border-radius: 2px; font-size: .9rem; }
+.sm-mail { color: var(--blue); }
+.sm-copied { color: var(--soft); }
+.sm-url { flex: 1 1 100%; font: inherit; font-size: .85rem; padding: 6px 8px; border: 1px solid var(--rule); }
+.sm-item.sm-target { outline: 2px solid var(--teal, #8CA9C6); outline-offset: 12px; scroll-margin-top: 90px; }
 .sm-none { margin: 30px 0; color: var(--soft); }
 .sm-more { margin: 40px 0 0; max-width: 62ch; color: var(--soft); font-size: 1rem; }
