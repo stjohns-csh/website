@@ -79,7 +79,7 @@ for s in data["sermons"]:
 <p class="pl-meta"><time datetime="{e(s['date'])}">{e(long_date(s['date']))}</time><span class="sep" aria-hidden="true">&bull;</span>{e(s['sunday'])}</p>
 <h3>{e(heading)}</h3>
 <p class="sm-by">{e(p['name'])}</p>
-<p class="sm-alt"><a href="{e(watch)}">Watch on YouTube</a><span class="sep" aria-hidden="true">&bull;</span><button type="button" class="sm-share-btn" aria-expanded="false">Share</button></p>
+<p class="sm-alt"><a href="{e(watch)}">Watch on YouTube</a><button type="button" class="sm-share-btn" aria-expanded="false" aria-label="Share this sermon"><svg class="sm-share-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 15V3M7.5 7.5 12 3l4.5 4.5M5 11v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/></svg><span>Share</span></button></p>
 </article>""")
 
 chips = '<button type="button" data-filter="all" aria-pressed="true">All</button>\n'
@@ -168,8 +168,9 @@ SCRIPT = """<script>
     var alt = el('p', 'sm-alt'), link = el('a', '', 'Watch on YouTube');
     link.href = 'https://www.youtube.com/watch?v=' + s.video + (start ? '&t=' + start + 's' : '');
     alt.appendChild(link);
-    var sp = el('span', 'sep', '\\u2022'); sp.setAttribute('aria-hidden', 'true'); alt.appendChild(sp);
-    var sb = el('button', 'sm-share-btn', 'Share'); sb.type = 'button'; sb.setAttribute('aria-expanded', 'false');
+    var sb = el('button', 'sm-share-btn'); sb.type = 'button'; sb.setAttribute('aria-expanded', 'false');
+    sb.setAttribute('aria-label', 'Share this sermon');
+    sb.innerHTML = '<svg class="sm-share-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 15V3M7.5 7.5 12 3l4.5 4.5M5 11v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/></svg><span>Share</span>';
     alt.appendChild(sb);
     a.appendChild(alt);
     if (!document.getElementById(s.date)) a.id = s.date;

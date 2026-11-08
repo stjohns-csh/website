@@ -21,10 +21,14 @@
 .sm-item h3 { font-family: var(--display); font-weight: 600; font-size: clamp(1.45rem, 2.4vw, 1.75rem);
   line-height: 1.16; color: var(--blue); margin: 0 0 .35em; text-wrap: balance; }
 .sm-by { margin: 0 0 .3em; color: var(--ink); font-size: 1rem; }
-.sm-alt { margin: 0; font-size: .9rem; }
+.sm-alt { margin: 0; font-size: .9rem; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
 .sm-alt a { color: var(--soft); }
-.sm-alt .sep { margin: 0 .55em; color: var(--soft); }
-.sm-share-btn, .sm-copy { font: inherit; font-size: .9rem; color: var(--blue); background: none; border: 0;
+.sm-share-btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--body); font-weight: 700;
+  font-size: .82rem; letter-spacing: .04em; color: var(--blue); background: #fff; border: 1.5px solid var(--blue);
+  border-radius: 2px; padding: 8px 16px; cursor: pointer; transition: background .15s, color .15s; }
+.sm-share-btn:hover, .sm-share-btn[aria-expanded="true"] { background: var(--blue); color: #fff; }
+.sm-share-icon { flex: none; }
+.sm-copy { font: inherit; font-size: .9rem; color: var(--blue); background: none; border: 0;
   padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
 .sm-share-btn:focus-visible, .sm-copy:focus-visible, .sm-mail:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
 .sm-share-panel { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin: 12px 0 0;
