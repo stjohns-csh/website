@@ -276,7 +276,8 @@
   line-height: 1.35;
 }
 .pl-rail-list a:hover { color: var(--blue); }
-.pl-rail-list time {
+.pl-rail-list time,
+.pl-rail-list .pl-rail-subject {
   display: block;
   font-family: var(--body);
   font-weight: 400;

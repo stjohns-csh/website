@@ -254,11 +254,14 @@ Church information <span class="chev" aria-hidden="true">&#9662;</span></button>
       li.dataset.category = it.category || '';
       var a = document.createElement('a');
       a.href = '/parish-life/' + it.slug + '/';
-      var t = document.createElement('time');
-      if (it.date) t.setAttribute('datetime', it.date);
-      t.textContent = it.dateLabel || it.date || '';
-      a.appendChild(t);
-      a.appendChild(document.createElement('br'));
+      // Subject, not date: the list is newest-first by when we POSTED a piece,
+      // and a posting date beside an event title reads as the event's date.
+      if (it.category) {
+        var t = document.createElement('span');
+        t.className = 'pl-rail-subject';
+        t.textContent = it.category;
+        a.appendChild(t);
+      }
       a.appendChild(document.createTextNode(it.title));
       li.appendChild(a);
       listEl.appendChild(li);
@@ -300,6 +303,7 @@ Church information <span class="chev" aria-hidden="true">&#9662;</span></button>
         var t = document.createElement('time');
         t.setAttribute('datetime', item.date);
         t.textContent = item.dateLabel || item.date;
+        meta.appendChild(document.createTextNode('Posted '));
         meta.appendChild(t);
       }
       if (item.category) {
