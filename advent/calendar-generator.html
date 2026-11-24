@@ -185,7 +185,7 @@ function metaDiv(text) { return '<div style="' + BODY + 'font-weight:700;font-si
 function eventBlock(ev, s, asOf) {
   var dates = remainingDates(ev, asOf);
   if (!dates.length) return "";
-  var h = '<tr><td style="padding:18px 32px 0;">' + titleDiv(titleHtml(ev));
+  var h = '<tr><td style="padding:18px 32px 0;text-align:center;">' + titleDiv(titleHtml(ev));
   h += metaDiv(dateLine(ev, dates));
   if (ev.blurb) h += '<div style="' + BODY + 'font-size:15px;line-height:1.6;color:' + C.charcoal + ';margin-top:8px;">' + noOrphan(ev.blurb) + '</div>';
   h += '<div style="margin:14px 0 4px;text-align:center;">' + (ev.ticketUrl ? ticketButton(ev) : calLinks(ev, dates, s)) + '</div>';
@@ -195,7 +195,7 @@ function eventBlock(ev, s, asOf) {
 function groupBlock(g, s, asOf) {
   var live = g.items.filter(function (i) { return remainingDates(i, asOf).length; });
   if (!live.length) return "";
-  var h = '<tr><td style="padding:18px 32px 0;">' + titleDiv(noOrphan(g.group));
+  var h = '<tr><td style="padding:18px 32px 0;text-align:center;">' + titleDiv(noOrphan(g.group));
   live.forEach(function (i) {
     h += '<div style="margin-top:10px;"><div style="' + BODY + 'font-size:15px;line-height:1.5;color:' + C.charcoal + ';">' + noOrphan(i.title + ", " + i.timeText) + '</div>' +
          '<div style="margin-top:2px;text-align:center;">' + calLinks(i, remainingDates(i, asOf), s) + '</div></div>';
