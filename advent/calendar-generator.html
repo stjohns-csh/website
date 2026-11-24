@@ -157,7 +157,7 @@ function icsText(ev, dates, s) {
 }
 
 // Newsletter look: same palette, fonts, button and divider as the builder's own sections.
-var C = { navy: "#084172", teal: "#8FB5B0", tealDeep: "#6F9994", charcoal: "#2C3539", mute: "#6B7170", hair: "#D9DFDD" };
+var C = { navy: "#BF0000", teal: "#BF0000", tealDeep: "#2C3539", charcoal: "#2C3539", mute: "#6B7170", hair: "#D9DFDD" };
 var HEAD = "font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;";
 var BODY = "font-family:'PT Sans',Helvetica,Arial,sans-serif;";
 
@@ -188,7 +188,7 @@ function eventBlock(ev, s, asOf) {
   var h = '<tr><td style="padding:18px 32px 0;">' + titleDiv(titleHtml(ev));
   h += metaDiv(dateLine(ev, dates));
   if (ev.blurb) h += '<div style="' + BODY + 'font-size:15px;line-height:1.6;color:' + C.charcoal + ';margin-top:8px;">' + noOrphan(ev.blurb) + '</div>';
-  h += '<div style="margin:14px 0 4px;">' + (ev.ticketUrl ? ticketButton(ev) : calLinks(ev, dates, s)) + '</div>';
+  h += '<div style="margin:14px 0 4px;text-align:center;">' + (ev.ticketUrl ? ticketButton(ev) : calLinks(ev, dates, s)) + '</div>';
   return h + '</td></tr>\n';
 }
 
@@ -198,7 +198,7 @@ function groupBlock(g, s, asOf) {
   var h = '<tr><td style="padding:18px 32px 0;">' + titleDiv(noOrphan(g.group));
   live.forEach(function (i) {
     h += '<div style="margin-top:10px;"><div style="' + BODY + 'font-size:15px;line-height:1.5;color:' + C.charcoal + ';">' + noOrphan(i.title + ", " + i.timeText) + '</div>' +
-         '<div style="margin-top:2px;">' + calLinks(i, remainingDates(i, asOf), s) + '</div></div>';
+         '<div style="margin-top:2px;text-align:center;">' + calLinks(i, remainingDates(i, asOf), s) + '</div></div>';
   });
   return h + '</td></tr>\n';
 }
