@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>ASJ Seasonal Calendar Block</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+body{font-family:Georgia,serif;max-width:900px;margin:24px auto;padding:0 16px;color:#222}
+h1{font-size:22px;margin:0 0 4px}p.s{margin:0 0 16px;color:#555;font-size:14px}
+.bar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+button{background:#b32d1e;color:#fff;border:0;border-radius:4px;padding:9px 16px;font:bold 14px Georgia,serif;cursor:pointer}
+button.alt{background:#fff;color:#b32d1e;border:1px solid #b32d1e}
+input[type=date]{font:15px Georgia,serif;padding:6px}
+textarea{width:100%;height:180px;font:12px monospace;margin-top:14px}
+#preview{border:1px solid #ddd;padding:12px;background:#f6f6f6}
+#msg{color:#2a6b2a;font-size:14px}
+</style></head><body>
+<h1>ASJ Seasonal Calendar Block</h1>
+<p class="s">Pick the date the newsletter goes out. Events before that date are dropped. Copy the HTML into a Mailchimp Code block. To reuse for Lent / Holy Week, edit the SETTINGS and EVENTS at the top of the script.</p>
+<div class="bar">
+ <label>Newsletter date: <input type="date" id="asof"></label>
+ <button id="copy">Copy HTML for Mailchimp</button>
+ <button id="ics" class="alt">Download .ics files</button>
+ <span id="msg"></span>
+</div>
+<div id="preview"></div>
+<textarea id="out" readonly></textarea>
+<script>
+/*CORE*/
+var asof=document.getElementById('asof');
+asof.value=ymd(new Date());
+function render(){var h=buildBlock(EVENTS,asof.value,SETTINGS);document.getElementById('preview').innerHTML=h;document.getElementById('out').value=h;}
+asof.addEventListener('change',render);render();
+function say(t){var m=document.getElementById('msg');m.textContent=t;setTimeout(function(){m.textContent=''},3000)}
+document.getElementById('copy').onclick=function(){var o=document.getElementById('out');o.select();(navigator.clipboard?navigator.clipboard.writeText(o.value):Promise.reject()).then(function(){say('Copied.')},function(){document.execCommand('copy');say('Copied.')})};
+document.getElementById('ics').onclick=function(){
+ var evs=flatEvents(EVENTS).filter(function(e){return !e.ticketUrl&&remainingDates(e,asof.value).length});
+ evs.forEach(function(e,i){setTimeout(function(){var b=new Blob([icsText(e,remainingDates(e,asof.value),SETTINGS)],{type:'text/calendar'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=e.slug+'.ics';document.body.appendChild(a);a.click();a.remove();},i*400)});
+ say('Downloading '+evs.length+' files. Upload them to '+SETTINGS.icsBaseUrl);
+};
+</script></body></html>
